@@ -1256,7 +1256,7 @@
           ★ 4.9 / 5.0 DARI <span id="badgeReviewCount">20.000</span> ULASAN PENGGUNA
         </span>
         <h2 style="font-size:clamp(21px,3vw,28px);font-weight:800;color:var(--navy);margin-top:12px;">Dipercaya 500.000+ Mahasiswa &amp; Akademisi</h2>
-        <p class="text-muted" style="max-width:620px;margin:8px auto 0;font-size:14.5px;"></p>
+        <p class="text-muted" style="max-width:620px;margin:8px auto 0;font-size:14.5px;">Ulasan bergerak otomatis dari kanan ke kiri. Arahkan kursor pada kartu untuk membaca detail atau tambahkan ulasan Anda.</p>
         <button type="button" class="btn btn-outline btn-sm" style="margin-top:16px;" onclick="openWriteReviewModal()">+ Tulis Ulasan Anda</button>
       </div>
 
@@ -1659,11 +1659,6 @@
           <div class="card"><h4 style="margin-bottom:12px;">Pertumbuhan Pengguna</h4><div class="chart-box"><canvas id="adminUsersChart" height="180"></canvas></div></div>
         </div>
 
-        <div class="grid-2" style="margin-bottom:24px;">
-          <div class="card"><h4 style="margin-bottom:12px;">Grafik Pemeriksaan Bulanan</h4><canvas id="adminChecksChart" height="180"></canvas></div>
-          <div class="card"><h4 style="margin-bottom:12px;">Pertumbuhan Pengguna</h4><canvas id="adminUsersChart" height="180"></canvas></div>
-        </div>
-
         <div class="grid-2">
           <div class="card"><h4 style="margin-bottom:12px;">Pemeriksaan Terbaru</h4><div id="aRecentChecksList"></div></div>
           <div class="card"><h4 style="margin-bottom:12px;">Pengguna Terbaru</h4><div id="aRecentUsersList"></div></div>
@@ -2048,6 +2043,14 @@
   </div>
 
   <script>
+    // Konfigurasi Koneksi Backend (Mendukung Google Apps Script Native, Cloudflare Pages Function, & Fallback URL)
+    const API_CONFIG = {
+      // Endpoint Cloudflare Pages Function (otomatis aktif saat di-deploy di Cloudflare Pages)
+      CLOUDFLARE_API_ENDPOINT: "/api/gateway",
+      // Opsional: Tempelkan Link Web App Google Apps Script Anda di sini sebagai jalur cadangan langsung
+      APPS_SCRIPT_FALLBACK_URL: "https://script.google.com/macros/s/PASTE_DEPLOYMENT_ID_ANDA_DI_SINI/exec"
+    };
+
     const STATE = {
       token: localStorage.getItem("pls_token") || "",
       user: JSON.parse(localStorage.getItem("pls_user") || "null"),
@@ -2069,34 +2072,73 @@
       return id;
     }
 
-    function callBackend(action, payload = {}) {
-      return new Promise((resolve, reject) => {
-        if (typeof google === "undefined" || !google.script || !google.script.run) {
-          reject(new Error("Lingkungan Google Apps Script belum siap."));
-          return;
-        }
-        const reqStr = JSON.stringify({
-          action: action,
-          token: STATE.token,
-          payload: payload,
-          clientMeta: navigator.userAgent.slice(0, 60)
+    async function callBackend(action, payload = {}) {
+      const reqPayloadObj = {
+        action: action,
+        token: STATE.token,
+        payload: payload,
+        clientMeta: navigator.userAgent.slice(0, 60)
+      };
+      const reqStr = JSON.stringify(reqPayloadObj);
+
+      // 1. Mode Native Google Apps Script (jika dibuka langsung dari script.google.com)
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler((resStr) => {
+              try {
+                const parsed = JSON.parse(resStr);
+                if (parsed.ok) resolve(parsed.data);
+                else reject(new Error(parsed.error || "Terjadi kesalahan."));
+              } catch (e) {
+                reject(new Error("Gagal memproses respons server."));
+              }
+            })
+            .withFailureHandler((err) => {
+              reject(new Error((err && err.message) || "Koneksi ke server gagal."));
+            })
+            .apiGateway(reqStr);
+        });
+      }
+
+      const hasValidFallback = API_CONFIG.APPS_SCRIPT_FALLBACK_URL &&
+        API_CONFIG.APPS_SCRIPT_FALLBACK_URL.startsWith("https://script.google.com/") &&
+        !API_CONFIG.APPS_SCRIPT_FALLBACK_URL.includes("PASTE_DEPLOYMENT_ID");
+
+      // 2. Mode Hosting Eksternal (Cloudflare Pages) -> Lewat Cloudflare Pages Function (/api/gateway)
+      try {
+        const cfResponse = await fetch(API_CONFIG.CLOUDFLARE_API_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: reqStr
         });
 
-        google.script.run
-          .withSuccessHandler((resStr) => {
-            try {
-              const parsed = JSON.parse(resStr);
-              if (parsed.ok) resolve(parsed.data);
-              else reject(new Error(parsed.error || "Terjadi kesalahan."));
-            } catch (e) {
-              reject(new Error("Gagal memproses respons server."));
-            }
-          })
-          .withFailureHandler((err) => {
-            reject(new Error((err && err.message) || "Koneksi ke server gagal."));
-          })
-          .apiGateway(reqStr);
+        const contentType = cfResponse.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const parsed = await cfResponse.json();
+          if (parsed.ok) return parsed.data;
+          // Jika APPS_SCRIPT_URL belum diatur di Cloudflare tapi fallback URL diisi, lanjut ke fallback
+          if (!String(parsed.error || "").includes("APPS_SCRIPT_URL") || !hasValidFallback) {
+            throw new Error(parsed.error || "Permintaan API ditolak server.");
+          }
+        } else if (!hasValidFallback) {
+          throw new Error("Endpoint /api/gateway tidak tersedia dan APPS_SCRIPT_FALLBACK_URL belum diisi.");
+        }
+      } catch (cfErr) {
+        if (!hasValidFallback) {
+          throw cfErr;
+        }
+      }
+
+      // 3. Jalur Fallback Langsung ke Link Web App Google Apps Script (text/plain menghindari preflight CORS)
+      const directRes = await fetch(API_CONFIG.APPS_SCRIPT_FALLBACK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: reqStr
       });
+      const directJson = await directRes.json();
+      if (directJson.ok) return directJson.data;
+      throw new Error(directJson.error || "Gagal terhubung ke Google Apps Script.");
     }
 
     function showToast(msg, type = "info") {
