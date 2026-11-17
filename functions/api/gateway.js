@@ -6,7 +6,7 @@
 
 // Opsional: Tempelkan URL Web App Google Apps Script Anda di bawah ini sebagai default,
 // atau atur melalui Environment Variable "APPS_SCRIPT_URL" di dashboard Cloudflare Pages.
-const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyafbz1QNJhyY6aTAfK4Vflj5tf_2TD9XHQwlwEbJlEUDioV63LCUCrO2S-HKPz4phq/exec";
+const DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4Tlr8tDDxoY_4lYZL-oPGzh3Vfzuc6jbwsKdIWYOal6rst3f6uUUDxAAKzIn4dNf_/exec";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -76,14 +76,28 @@ export async function onRequest(context) {
 
       const responseText = await gasResponse.text();
 
-      // Validasi bahwa respons dari Google adalah JSON (bukan halaman login HTML Google)
+      // Validasi bahwa respons dari Google adalah JSON (bukan halaman login/error HTML Google)
+      if (responseText.trim().startsWith("<")) {
+        const lowerHtml = responseText.toLowerCase();
+        let friendlyError = "Google Apps Script mengembalikan halaman HTML bukan JSON. Pastikan URL Web App berakhiran /exec dan sudah di-deploy ulang dengan 'New version'.";
+        if (lowerHtml.includes("accounts.google.com") || lowerHtml.includes("servicelogin")) {
+          friendlyError = "Akses Google Apps Script ditolak (Halaman Login Google). Ubah pengaturan Deployment Web App 'Who has access' menjadi 'Anyone' (Siapa saja) dan gunakan URL /exec.";
+        } else if (lowerHtml.includes("dopost") || lowerHtml.includes("script function not found")) {
+          friendlyError = "Deployment Google Apps Script masih menggunakan versi lama (fungsi doPost belum aktif). Klik Deploy > Manage deployments > ikon Pensil (Edit) > pilih Version: 'New version' > Deploy.";
+        }
+        return new Response(
+          JSON.stringify({ ok: false, error: friendlyError }),
+          { status: 502, headers: CORS_HEADERS }
+        );
+      }
+
       try {
         JSON.parse(responseText);
       } catch (parseErr) {
         return new Response(
           JSON.stringify({
             ok: false,
-            error: "Google Apps Script tidak mengembalikan JSON. Pastikan Deployment Web App diatur ke 'Execute as: Me' dan 'Who has access: Anyone'."
+            error: "Respons dari Google Apps Script tidak berformat JSON yang valid."
           }),
           { status: 502, headers: CORS_HEADERS }
         );
