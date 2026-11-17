@@ -1,0 +1,3348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plagisense — Write Original. Think Different.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0A192F;
+      --navy-light: #112240;
+      --blue: #2563EB;
+      --blue-hover: #1D4ED8;
+      --cyan: #06B6D4;
+      --white: #FFFFFF;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --bri-blue: #00529C;
+      --bri-orange: #F37021;
+      --radius: 14px;
+      --shadow-sm: 0 1px 3px rgba(10, 25, 47, 0.06);
+      --shadow-md: 0 10px 25px -5px rgba(10, 25, 47, 0.08);
+      --shadow-lg: 0 20px 40px -10px rgba(10, 25, 47, 0.16);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14.5px;
+      line-height: 1.6;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      position: relative;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-page-wrap {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+    .hidden { display: none !important; }
+    .text-blue { color: var(--blue); }
+    .text-muted { color: var(--text-muted); }
+    .fw-bold { font-weight: 700; }
+
+    /* Crisp SVG Icon Styling */
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), #1E40AF);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
+    .btn-cyan {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: var(--white);
+    }
+    .btn-outline {
+      background: var(--white);
+      color: var(--navy);
+      border-color: var(--border);
+    }
+    .btn-outline:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); background: #EFF6FF; }
+    .btn-ghost-light {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .btn-ghost-light:hover { background: rgba(255, 255, 255, 0.16); }
+    .btn-danger { background: #FEE2E2; color: #B91C1C; border-color: #FECACA; }
+    .btn-danger:hover { background: #EF4444; color: #FFFFFF; }
+    .btn-sm { min-height: 36px; padding: 6px 12px; font-size: 13px; border-radius: 8px; }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(10, 25, 47, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      width: 100%;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      height: 70px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--white);
+      text-decoration: none;
+      cursor: pointer;
+      min-width: 0;
+    }
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .brand-tagline {
+      font-size: 11px;
+      font-weight: 500;
+      color: #67E8F9;
+      line-height: 1.2;
+    }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a {
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.18), transparent 45%),
+                  radial-gradient(circle at 15% 80%, rgba(37, 99, 235, 0.22), transparent 50%),
+                  var(--navy);
+      color: var(--white);
+      padding: 64px 0 84px;
+    }
+    .hero-content {
+      max-width: 740px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .tagline-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(6, 182, 212, 0.14);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: #67E8F9;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(25px, 4vw, 40px);
+      font-weight: 800;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      color: #CBD5E1;
+      font-size: clamp(14px, 1.9vw, 16px);
+      line-height: 1.65;
+      max-width: 620px;
+      margin: 0 auto 28px;
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Sections */
+    .section { padding: 68px 0; scroll-margin-top: 74px; }
+    .section-header { text-align: center; max-width: 640px; margin: 0 auto 40px; }
+    .section-header h2 { font-size: clamp(21px, 3vw, 28px); font-weight: 800; line-height: 1.28; color: var(--navy); margin-bottom: 10px; }
+    .section-header p { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; }
+
+    /* Stats Bar */
+    .stats-strip {
+      margin-top: -40px;
+      position: relative;
+      z-index: 10;
+    }
+    .stats-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .stat-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 14px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      transition: var(--transition);
+      min-width: 0;
+    }
+    .stat-box:hover {
+      transform: translateY(-3px);
+      border-color: #93C5FD;
+    }
+    .stat-num { font-size: clamp(20px, 2.6vw, 26px); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; line-height: 1.2; }
+    .stat-label { font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-top: 6px; line-height: 1.35; }
+
+    /* Paket Harga Plagisense Pro */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 940px;
+      margin: 0 auto;
+    }
+    .plan-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+    .plan-card.pro-featured {
+      border: 2px solid var(--blue);
+      background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 36%);
+      box-shadow: 0 18px 36px -8px rgba(37, 99, 235, 0.18);
+    }
+    .pro-ribbon {
+      position: absolute;
+      top: -13px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--blue), #1E40AF);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 4px 12px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+    .plan-price {
+      font-size: clamp(24px, 3.2vw, 30px);
+      font-weight: 800;
+      color: var(--navy);
+      margin: 12px 0;
+      line-height: 1.2;
+    }
+    .plan-price span {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .plan-features {
+      list-style: none;
+      margin: 16px 0 24px;
+      display: grid;
+      gap: 10px;
+    }
+    .plan-features li {
+      font-size: 13.5px;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .plan-check {
+      color: var(--success);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Reviews Marquee */
+    .reviews-section {
+      padding: 68px 0;
+      background: #F1F5F9;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      contain: layout paint;
+    }
+    .marquee-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      margin-top: 28px;
+      padding: 8px 0;
+      mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 18px;
+      width: max-content;
+      animation: scrollRightToLeft 42s linear infinite;
+    }
+    .marquee-wrapper:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes scrollRightToLeft {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .review-card {
+      width: 310px;
+      max-width: 82vw;
+      flex-shrink: 0;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .review-stars {
+      color: #F59E0B;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+    .review-pro-tag {
+      background: #DBEAFE;
+      color: #1D4ED8;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* Bank BRI Payment Card Styling */
+    .bri-card {
+      background: linear-gradient(135deg, #003D79 0%, #00529C 65%, #0066C0 100%);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 24px -6px rgba(0, 82, 156, 0.38);
+    }
+    .bri-card::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      bottom: -30px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(243, 112, 33, 0.22);
+      pointer-events: none;
+    }
+    .bri-norek-box {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .bri-copy-btn {
+      background: var(--bri-orange);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .bri-copy-btn:hover {
+      background: #D95D14;
+      transform: scale(1.03);
+    }
+    .bri-method-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 18px;
+    }
+    .bri-method-option:hover,
+    .bri-method-option.selected {
+      border-color: #00529C;
+      background: #F0F7FF;
+      box-shadow: 0 8px 20px -6px rgba(0, 82, 156, 0.22);
+    }
+    .bri-guide-box {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      color: #334155;
+    }
+    .bri-guide-box ol {
+      margin: 8px 0 0 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    /* Centered Animated Payment Success & Failure Overlays */
+    .payment-success-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(10, 25, 47, 0.78);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+      animation: fadeOverlayIn 0.3s ease forwards;
+    }
+    @keyframes fadeOverlayIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .payment-success-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 460px;
+      width: 100%;
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.45);
+      border: 2px solid #10B981;
+      animation: springPopCenter 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes springPopCenter {
+      0% { opacity: 0; transform: scale(0.55) translateY(30px); }
+      70% { opacity: 1; transform: scale(1.03) translateY(-4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .success-check-circle {
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981, #059669);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 0 12px rgba(16, 185, 129, 0.16);
+      animation: pulseRing 1.8s infinite;
+    }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); }
+      70% { box-shadow: 0 0 0 18px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .success-check-svg path {
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: drawCheckStroke 0.65s 0.25s ease forwards;
+    }
+    @keyframes drawCheckStroke {
+      to { stroke-dashoffset: 0; }
+    }
+    .payment-failure-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 460px;
+      width: 100%;
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.45);
+      border: 2px solid #EF4444;
+      animation: springPopCenter 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .failure-cross-circle {
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 0 12px rgba(239, 68, 68, 0.16);
+      animation: pulseRingRed 1.8s infinite;
+    }
+    @keyframes pulseRingRed {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+      70% { box-shadow: 0 0 0 18px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .live-radar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #F59E0B;
+      display: inline-block;
+      flex-shrink: 0;
+      animation: blinkRadar 1.2s infinite ease-in-out;
+    }
+    @keyframes blinkRadar {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* Cards & Grids */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-3 > div, .grid-4 > div, .grid-2 > div { min-width: 0; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      min-width: 0;
+      max-width: 100%;
+    }
+    .card h3 { font-size: 17px; font-weight: 700; color: var(--navy); line-height: 1.35; }
+    .card h4 { font-size: 15.5px; font-weight: 700; color: var(--navy); line-height: 1.35; }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .chart-box {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .icon-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: #EFF6FF;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .icon-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: #EFF6FF;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    /* Guest Quota Banner */
+    .quota-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: linear-gradient(90deg, #EFF6FF, #ECFEFF);
+      border: 1px solid #BAE6FD;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+
+    /* Upload Dropzone */
+    .dropzone {
+      border: 2px dashed #93C5FD;
+      background: #F8FAFC;
+      border-radius: 16px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--blue);
+      background: #EFF6FF;
+    }
+    .file-preview-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 14px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      transition: width 0.35s ease;
+    }
+
+    /* Forms */
+    .form-group { margin-bottom: 15px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .form-control {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--white);
+      transition: var(--transition);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+    textarea.form-control { min-height: 160px; resize: vertical; line-height: 1.6; }
+
+    /* Tabs */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* App Shell */
+    .app-shell {
+      display: flex;
+      min-height: calc(100vh - 70px);
+      width: 100%;
+    }
+    .sidebar {
+      width: 268px;
+      max-width: 82vw;
+      background: var(--navy);
+      color: var(--white);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 6px; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: #CBD5E1;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .sidebar-item:hover { background: rgba(255, 255, 255, 0.08); color: var(--white); }
+    .sidebar-item.active {
+      background: linear-gradient(90deg, var(--blue), rgba(6, 182, 212, 0.85));
+      color: var(--white);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+    }
+    .sidebar-logout {
+      margin-top: 24px;
+      color: #FCA5A5;
+      border: 1px solid rgba(252, 165, 165, 0.2);
+    }
+    .sidebar-logout:hover {
+      background: rgba(239, 68, 68, 0.16);
+      color: #FFFFFF;
+    }
+    .main-workspace {
+      flex: 1;
+      padding: 28px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: hidden;
+    }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 25, 47, 0.6);
+      z-index: 95;
+    }
+
+    /* Circular Progress & Result Highlighting */
+    .circular-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 0 auto;
+    }
+    .circular-wrap svg { transform: rotate(-90deg); width: 160px; height: 160px; }
+    .circular-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .highlight-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      max-height: 320px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.8;
+      word-break: break-word;
+    }
+    .seg-matched {
+      background: #FEF3C7;
+      border-bottom: 2px solid #F59E0B;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-blue { background: #DBEAFE; color: #1E40AF; }
+    .badge-cyan { background: #CFFAFE; color: #0E7490; }
+    .badge-green { background: #D1FAE5; color: #065F46; }
+    .badge-amber { background: #FEF3C7; color: #92400E; }
+    .badge-red { background: #FEE2E2; color: #991B1B; }
+    .badge-pro-gold { background: linear-gradient(135deg, #F59E0B, #D97706); color: #FFFFFF; font-weight: 800; }
+
+    /* Tables */
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table.saas-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.saas-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background: #F1F5F9;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    table.saas-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    /* Modals & Toasts */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 25, 47, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 120;
+      overflow-y: auto;
+    }
+    .modal-box {
+      background: var(--white);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 26px 22px;
+      box-shadow: var(--shadow-lg);
+      margin: auto;
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 360px;
+    }
+    .toast {
+      background: var(--navy);
+      color: var(--white);
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
+      font-weight: 500;
+      border-left: 4px solid var(--cyan);
+      animation: slideIn 0.25s ease;
+    }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.success { border-left-color: var(--success); }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--navy);
+      color: #94A3B8;
+      padding: 56px 0 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .footer h4 { color: var(--white); margin-bottom: 14px; font-size: 15px; }
+    .footer a { color: #94A3B8; text-decoration: none; display: block; margin-bottom: 8px; font-size: 14px; }
+    .footer a:hover { color: var(--cyan); }
+
+    /* =========================================
+       RESPONSIVE BREAKPOINTS (TABLET & MOBILE HP)
+       ========================================= */
+    @media (max-width: 960px) {
+      .grid-4, .stats-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 0 16px; }
+      .nav-links, .nav-desktop-only { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+
+      .hero { padding: 44px 0 68px; }
+      .hero h1 { font-size: 26px; line-height: 1.25; }
+      .hero p { font-size: 14px; margin-bottom: 22px; }
+
+      .section { padding: 48px 0; }
+      .section-header { margin-bottom: 28px; }
+      .section-header h2 { font-size: 21px; }
+      .section-header p { font-size: 13.5px; }
+
+      .stats-strip { margin-top: -34px; }
+      .stats-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat-box { padding: 16px 12px; }
+      .stat-num { font-size: 20px; }
+      .stat-label { font-size: 12px; }
+
+      .grid-3, .grid-2, .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
+      .plan-card { padding: 22px 18px; }
+      .plan-price { font-size: 24px; }
+
+      .tab-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 10px 12px;
+        font-size: 13px;
+        white-space: normal;
+        text-align: center;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        transform: translateX(-100%);
+        overflow-y: auto;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop.open { display: block; }
+      .main-workspace { padding: 18px 14px; }
+
+      table.saas-table thead { display: none; }
+      table.saas-table, table.saas-table tbody, table.saas-table tr, table.saas-table td {
+        display: block;
+        width: 100%;
+      }
+      table.saas-table tr {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+      table.saas-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 4px;
+        border-bottom: 1px dashed #E2E8F0;
+        text-align: right;
+        word-break: break-word;
+      }
+      table.saas-table td:last-child { border-bottom: none; }
+      table.saas-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 12px;
+        color: var(--text-muted);
+        text-align: left;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 0 14px; }
+      .nav-inner { height: 60px; gap: 6px; }
+      .brand { font-size: 16px; gap: 8px; }
+      .brand-icon { width: 32px; height: 32px; font-size: 15px; border-radius: 8px; }
+      .brand-tagline { font-size: 10.5px; }
+      .nav-actions { gap: 6px; }
+      .nav-actions .btn-sm { padding: 6px 10px; font-size: 12.5px; min-height: 36px; }
+      #navProBadge { padding: 3px 8px; font-size: 11px; }
+
+      .hero h1 { font-size: 24px; }
+      .tagline-pill { font-size: 12px; padding: 5px 12px; }
+      .hero-cta { flex-direction: column; width: 100%; max-width: 340px; margin: 0 auto; }
+      .hero-cta .btn { width: 100%; }
+
+      .card { padding: 18px 14px; }
+      .dropzone { padding: 24px 12px; }
+      .chk-submit-btn { width: 100%; }
+
+      .modal-box { padding: 20px 16px; border-radius: 16px; }
+      .bri-card { padding: 16px 14px; }
+      .bri-method-option { padding: 12px; gap: 10px; }
+      .bri-norek-box { padding: 10px 12px; }
+      .bri-copy-btn { width: 100%; text-align: center; }
+
+      .payment-success-card, .payment-failure-card { padding: 26px 18px; }
+      .toast-container { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+    }
+
+    @media (max-width: 360px) {
+      .brand-tagline { display: none; }
+      .stats-grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-page-wrap">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+        <button id="drawerToggleBtn" class="mobile-menu-btn hidden" onclick="toggleMobileSidebar()" aria-label="Menu Sidebar">
+          <svg class="nav-icon" style="width:24px;height:24px;" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <a class="brand" onclick="navigateTo('landing')">
+          <div class="brand-icon">P</div>
+          <div style="min-width:0;">
+            <span>Plagisense</span>
+            <div class="brand-tagline">Write Original. Think Different.</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="nav-links" id="landingNavLinks">
+        <a href="#beranda" onclick="navigateTo('landing')">Beranda</a>
+        <a href="#fitur" onclick="navigateTo('landing')">Fitur</a>
+        <a href="#harga-pro" onclick="navigateTo('landing')">Paket Pro</a>
+        <a href="#ulasan-pengguna" onclick="navigateTo('landing')">Ulasan</a>
+        <a href="#cara-kerja" onclick="navigateTo('landing')">Cara Kerja</a>
+      </nav>
+
+      <div class="nav-actions" id="navGuestActions">
+        <button type="button" class="btn btn-ghost-light btn-sm" onclick="openAuthModal('login')">Login</button>
+        <button type="button" class="btn btn-cyan btn-sm" onclick="openAuthModal('register')">Daftar</button>
+      </div>
+
+      <div class="nav-actions hidden" id="navUserActions">
+        <span id="navProBadge" class="badge badge-pro-gold hidden">PRO</span>
+        <span id="navUserGreeting" class="nav-desktop-only" style="font-size:13px;color:#CBD5E1;"></span>
+        <button type="button" class="btn btn-cyan btn-sm" onclick="goToMyDashboard()">Dashboard</button>
+        <button type="button" class="btn btn-ghost-light btn-sm" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW 1: LANDING PAGE -->
+  <main id="view-landing">
+    <section id="beranda" class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="tagline-pill">✦ Write Original. Think Different.</div>
+          <h1>Pastikan Karya Ilmiahmu Orisinal.</h1>
+          <p>Plagisense membantu mahasiswa, dosen, dan peneliti memeriksa tingkat kemiripan skripsi, makalah, dan jurnal secara akurat sekaligus menyempurnakan tata bahasa melalui fitur parafrase akademik.</p>
+          <div class="hero-cta">
+            <button type="button" class="btn btn-cyan" onclick="openQuickChecker()">Mulai Cek Plagiasi</button>
+            <a href="#harga-pro" class="btn btn-ghost-light">Upgrade Pro ($1)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATISTIK AKTUAL -->
+    <section class="stats-strip">
+      <div class="container">
+        <div class="stats-grid-4">
+          <div class="stat-box">
+            <div class="stat-num" id="statTotalUsers">500.000</div>
+            <div class="stat-label">Total Pengguna Terdaftar</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statTotalDocs">700.000</div>
+            <div class="stat-label">Total Dokumen Diperiksa</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statSuccessChecks">700.000</div>
+            <div class="stat-label">Total Pemeriksaan Berhasil</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statTotalReviews">20.000</div>
+            <div class="stat-label">Ulasan Pengguna Terverifikasi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GUEST QUICK CHECKER EMBED SECTION -->
+    <section id="quick-checker-section" class="section" style="padding-bottom:20px;">
+      <div class="container">
+        <div class="card" style="border-top:4px solid var(--blue);">
+          <div class="quota-banner" id="guestQuotaBanner">
+            <div>
+              <strong>Mode Pengunjung Tanpa Login</strong>
+              <div class="text-muted" style="font-size:13px;">Anda mendapatkan 2 kali kesempatan pemeriksaan plagiasi gratis sebelum perlu mendaftar.</div>
+            </div>
+            <span class="badge badge-blue" id="guestQuotaBadge">Sisa Kesempatan: 2 / 2</span>
+          </div>
+          <div id="guestPlagiarismMount"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FITUR UNGGULAN -->
+    <section id="fitur" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Fitur Unggulan Plagisense</h2>
+          <p>Ekosistem lengkap untuk menjaga integritas akademik dari tahap pengecekan awal hingga penyusunan laporan akhir.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="icon-badge">01</div>
+            <h3>Pemeriksaan Plagiasi</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Unggah file .docx, .pdf, atau tempel teks langsung untuk dianalisis menggunakan mesin pembanding akademik resmi.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">02</div>
+            <h3>Parafrase Teks Akademik</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Ubah struktur kalimat dengan gaya Akademis, Formal, Profesional, atau Sederhana tanpa merusak makna maupun istilah ilmiah.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">03</div>
+            <h3>Analisis Kemiripan Visual</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Dilengkapi circular progress, grafik distribusi kemiripan, highlight bagian teks yang cocok, dan daftar tautan sumber.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">04</div>
+            <h3>Riwayat Pemeriksaan</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Seluruh riwayat dokumen dan hasil pengecekan tersimpan aman berdasarkan identitas akun pengguna.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">05</div>
+            <h3>Laporan Hasil PDF</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Unduh sertifikat laporan analisis kemiripan dalam format PDF siap lampir untuk kebutuhan administrasi kampus.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">06</div>
+            <h3>Arsip Privat Terproteksi</h3>
+            <p class="text-muted" style="font-size:14px;margin-top:8px;">Dokumen tersimpan privat per pengguna dengan validasi otorisasi ketat dan audit trail aktivitas sistem.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAKET LANGGANAN PLAGISENSE PRO -->
+    <section id="harga-pro" class="section" style="background:#FFFFFF;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <span class="badge badge-blue" style="margin-bottom:10px;">PENAWARAN TERBAIK</span>
+          <h2>Paket Langganan Plagisense Pro</h2>
+          <p>Tingkatkan kapasitas riset dan penulisan skripsi Anda hanya dengan <strong>Rp 18.256 ($1)</strong> per bulan.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="plan-card">
+            <div>
+              <h3 style="font-size:20px;color:var(--navy);">Akun Dasar (Gratis)</h3>
+              <p class="text-muted" style="font-size:13px;margin-top:4px;">Cocok untuk pemeriksaan singkat harian.</p>
+              <div class="plan-price">Rp 0 <span>/ selamanya</span></div>
+              <ul class="plan-features">
+                <li><span class="plan-check">✓</span> Cek plagiasi dokumen .pdf &amp; .docx (maks. 10 MB)</li>
+                <li><span class="plan-check">✓</span> Pemindaian standar 5 kalimat kunci per dokumen</li>
+                <li><span class="plan-check">✓</span> Parafrase akademik hingga 8.000 karakter / sesi</li>
+                <li><span class="plan-check">✓</span> Riwayat pemeriksaan &amp; laporan standar</li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-outline" style="width:100%;" onclick="openQuickChecker()">Gunakan Paket Gratis</button>
+          </div>
+
+          <div class="plan-card pro-featured">
+            <span class="pro-ribbon">PALING POPULER</span>
+            <div>
+              <h3 style="font-size:20px;color:#1E3A8A;">Plagisense Pro</h3>
+              <p class="text-muted" style="font-size:13px;margin-top:4px;">Kapasitas penuh untuk skripsi, tesis, disertasi &amp; jurnal.</p>
+              <div class="plan-price">Rp 18.256 <span>($1 / 30 hari)</span></div>
+              <ul class="plan-features">
+                <li><span class="plan-check">✓</span> <strong>Unlimited</strong> pemeriksaan plagiasi tanpa batas harian</li>
+                <li><span class="plan-check">✓</span> <strong>Deep-Scan 25 kalimat kunci</strong> (5x lebih akurat &amp; mendalam)</li>
+                <li><span class="plan-check">✓</span> Upload dokumen skripsi besar hingga <strong>25 MB</strong></li>
+                <li><span class="plan-check">✓</span> Parafrase hingga <strong>25.000 karakter</strong> + Mode Jurnal SINTA/Scopus</li>
+                <li><span class="plan-check">✓</span> <strong>Smart Citation Filter</strong> (abaikan daftar pustaka otomatis)</li>
+                <li><span class="plan-check">✓</span> Sertifikat Keaslian PDF Resmi + Lencana <strong>PRO MEMBER</strong></li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="openBriProModal()">Berlangganan Pro — Rp 18.256 ($1)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKSI ULASAN PENGGUNA -->
+    <section id="ulasan-pengguna" class="reviews-section">
+      <div class="container" style="text-align:center;">
+        <span style="display:inline-block;background:#FEF3C7;color:#B45309;font-weight:800;font-size:12px;padding:6px 14px;border-radius:999px;">
+          ★ 4.9 / 5.0 DARI <span id="badgeReviewCount">20.000</span> ULASAN PENGGUNA
+        </span>
+        <h2 style="font-size:clamp(21px,3vw,28px);font-weight:800;color:var(--navy);margin-top:12px;">Dipercaya 500.000+ Mahasiswa &amp; Akademisi</h2>
+        <p class="text-muted" style="max-width:620px;margin:8px auto 0;font-size:14.5px;">Ulasan bergerak otomatis dari kanan ke kiri. Arahkan kursor pada kartu untuk membaca detail atau tambahkan ulasan Anda.</p>
+        <button type="button" class="btn btn-outline btn-sm" style="margin-top:16px;" onclick="openWriteReviewModal()">+ Tulis Ulasan Anda</button>
+      </div>
+
+      <div class="marquee-wrapper">
+        <div class="marquee-track" id="reviewsMarqueeTrack"></div>
+      </div>
+    </section>
+
+    <!-- CARA KERJA -->
+    <section id="cara-kerja" class="section" style="background:#FFFFFF;border-bottom:1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <h2>Cara Kerja Plagisense</h2>
+          <p>Empat langkah sistematis untuk memverifikasi orisinalitas karya ilmiah Anda.</p>
+        </div>
+        <div class="grid-4">
+          <div class="card">
+            <span class="badge badge-cyan">Langkah 1</span>
+            <h4 style="margin:12px 0 6px;">Upload Dokumen</h4>
+            <p class="text-muted" style="font-size:13px;">Pilih file Word (.docx), PDF (.pdf), atau masukkan teks secara langsung.</p>
+          </div>
+          <div class="card">
+            <span class="badge badge-cyan">Langkah 2</span>
+            <h4 style="margin:12px 0 6px;">Sistem Memproses</h4>
+            <p class="text-muted" style="font-size:13px;">Dokumen diarsipkan secara privat dan teks diekstrak secara otomatis.</p>
+          </div>
+          <div class="card">
+            <span class="badge badge-cyan">Langkah 3</span>
+            <h4 style="margin:12px 0 6px;">Analisis Kemiripan</h4>
+            <p class="text-muted" style="font-size:13px;">Teks dicocokkan ke repositori internal &amp; indeks jurnal ilmiah terbuka.</p>
+          </div>
+          <div class="card">
+            <span class="badge badge-cyan">Langkah 4</span>
+            <h4 style="margin:12px 0 6px;">Tampilkan Hasil</h4>
+            <p class="text-muted" style="font-size:13px;">Lihat detail highlight kemiripan, lakukan parafrase, atau unduh laporan PDF.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="tentang" class="footer">
+      <div class="container grid-3" style="margin-bottom:32px;">
+        <div>
+          <div class="brand" style="margin-bottom:12px;">
+            <div class="brand-icon">P</div>
+            <span>Plagisense</span>
+          </div>
+          <p style="font-size:13px;">Platform digital pemeriksaan tingkat kemiripan dokumen akademik dan parafrase teks. <em>Write Original. Think Different.</em></p>
+        </div>
+        <div>
+          <h4>Navigasi</h4>
+          <a href="#beranda">Beranda</a>
+          <a href="#fitur">Fitur Unggulan</a>
+          <a href="#harga-pro">Paket Plagisense Pro</a>
+          <a href="#ulasan-pengguna">Ulasan Pengguna</a>
+          <a href="javascript:void(0)" onclick="openAuthModal('login')">Masuk / Daftar</a>
+        </div>
+        <div>
+          <h4>Informasi Layanan &amp; Kontak</h4>
+          <p style="font-size:13px;margin-bottom:6px;">Dukungan Format: .DOCX, .PDF, Teks Langsung</p>
+          <p style="font-size:13px;margin-bottom:6px;">Email Layanan: support@plagisense.id</p>
+          <p style="font-size:12px;color:#64748B;">Kebijakan Privasi: Dokumen pengguna bersifat privat dan terisolasi per akun.</p>
+        </div>
+      </div>
+      <div class="container" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;text-align:center;font-size:12px;">
+        &copy; 2026 Plagisense. Seluruh Hak Cipta Dilindungi.
+      </div>
+    </footer>
+  </main>
+
+  <!-- VIEW 2: USER DASHBOARD SHELL -->
+  <div id="view-user-app" class="app-shell hidden">
+    <div class="sidebar-backdrop" id="userSidebarBackdrop" onclick="toggleMobileSidebar()"></div>
+    <aside class="sidebar" id="userSidebar">
+      <div>
+        <div style="padding:0 10px 18px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+            <span style="font-size:11.5px;color:#67E8F9;text-transform:uppercase;letter-spacing:0.06em;">Workspace Pengguna</span>
+            <span id="sidebarPlanBadge" class="badge badge-cyan" style="font-size:11px;">FREE</span>
+          </div>
+          <div id="sidebarUserName" style="font-weight:700;font-size:15px;margin-top:4px;">Pengguna</div>
+          <div id="sidebarUserEmail" style="font-size:12px;color:#94A3B8;word-break:break-all;"></div>
+        </div>
+        <div class="sidebar-nav">
+          <button type="button" class="sidebar-item active" data-upage="u-dashboard" onclick="switchUserPage('u-dashboard')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Dashboard</span>
+          </button>
+          <button type="button" class="sidebar-item" data-upage="u-check" onclick="switchUserPage('u-check')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><line x1="13.5" y1="16.5" x2="16" y2="19"/></svg>
+            <span>Cek Plagiasi Baru</span>
+          </button>
+          <button type="button" class="sidebar-item" data-upage="u-history" onclick="switchUserPage('u-history')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+            <span>Pencarian Plagiasi Saya</span>
+          </button>
+          <button type="button" class="sidebar-item" data-upage="u-paraphrase" onclick="switchUserPage('u-paraphrase')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>Parafrase Teks</span>
+          </button>
+          <button type="button" class="sidebar-item" data-upage="u-profile" onclick="switchUserPage('u-profile')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profil Saya</span>
+          </button>
+          <button type="button" class="sidebar-item" style="background:rgba(245,158,11,0.16);color:#FCD34D;border:1px solid rgba(245,158,11,0.35);margin-top:8px;" onclick="openBriProModal()">
+            <svg class="nav-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Upgrade Pro ($1)</span>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="sidebar-item sidebar-logout" onclick="handleLogout()">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </button>
+    </aside>
+
+    <main class="main-workspace">
+      <section id="u-dashboard">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+          <div>
+            <h2 id="welcomeUserTitle" style="font-size:21px;color:var(--navy);">Selamat datang!</h2>
+            <p class="text-muted" style="font-size:14px;">Pantau aktivitas pemeriksaan plagiasi dan produktivitas penulisan akademik Anda.</p>
+          </div>
+          <button type="button" id="dashUpgradeProBtn" class="btn btn-primary btn-sm" onclick="openBriProModal()">★ Upgrade Plagisense Pro — Rp 18.256 ($1)</button>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="card">
+            <div class="text-muted" style="font-size:12px;font-weight:600;">TOTAL DOKUMEN DIPERIKSA</div>
+            <div id="uStatDocs" style="font-size:24px;font-weight:800;color:var(--navy);margin-top:6px;">0</div>
+          </div>
+          <div class="card">
+            <div class="text-muted" style="font-size:12px;font-weight:600;">RATA-RATA KEMIRIPAN</div>
+            <div id="uStatAvgSim" style="font-size:24px;font-weight:800;color:var(--blue);margin-top:6px;">0%</div>
+          </div>
+          <div class="card">
+            <div class="text-muted" style="font-size:12px;font-weight:600;">PENGGUNAAN PARAFRASE</div>
+            <div id="uStatPara" style="font-size:24px;font-weight:800;color:var(--cyan);margin-top:6px;">0</div>
+          </div>
+          <div class="card">
+            <div class="text-muted" style="font-size:12px;font-weight:600;">PEMERIKSAAN TERAKHIR</div>
+            <div id="uStatLastDate" style="font-size:15px;font-weight:700;color:var(--navy);margin-top:10px;">Belum ada</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size:16px;margin-bottom:14px;">Grafik Aktivitas Pemeriksaan</h3>
+            <div class="chart-box"><canvas id="userActivityChart" height="190"></canvas></div>
+          </div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <h3 style="font-size:16px;">Dokumen Terbaru</h3>
+              <button type="button" class="btn btn-outline btn-sm" onclick="switchUserPage('u-history')">Lihat Semua</button>
+            </div>
+            <div id="uRecentDocsList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="u-check" class="hidden">
+        <div style="margin-bottom:20px;">
+          <h2 style="font-size:22px;color:var(--navy);">Pemeriksaan Plagiasi Dokumen</h2>
+          <p class="text-muted" style="font-size:14px;">Unggah file Word (.docx), PDF (.pdf), atau masukkan teks secara langsung.</p>
+        </div>
+        <div class="card" id="userPlagiarismMount"></div>
+      </section>
+
+      <section id="u-result" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+          <div>
+            <h2 style="font-size:22px;color:var(--navy);">Hasil Analisis Kemiripan</h2>
+            <p id="resDocMeta" class="text-muted" style="font-size:13px;word-break:break-word;"></p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="recheckCurrentDoc()">Periksa Ulang</button>
+            <button type="button" class="btn btn-cyan btn-sm" onclick="sendMatchedToParaphrase()">Parafrase Teks</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btnDownloadReportPdf" onclick="downloadCurrentReportPdf()">Download Laporan PDF</button>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom:24px;">
+          <div class="card" style="text-align:center;">
+            <div class="circular-wrap">
+              <svg viewBox="0 0 160 160">
+                <circle cx="80" cy="80" r="66" fill="none" stroke="#E2E8F0" stroke-width="14"></circle>
+                <circle id="resCircleBar" cx="80" cy="80" r="66" fill="none" stroke="#2563EB" stroke-width="14" stroke-dasharray="414.69" stroke-dashoffset="414.69" stroke-linecap="round"></circle>
+              </svg>
+              <div class="circular-center">
+                <span id="resSimPct" style="font-size:28px;font-weight:800;color:var(--navy);">0%</span>
+                <span style="font-size:11px;color:var(--text-muted);">Kemiripan</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;font-size:13px;font-weight:600;color:var(--cyan);">
+              Teks Tidak Terdeteksi Cocok: <span id="resUniquePct">100%</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 style="font-size:14px;margin-bottom:12px;">Statistik Dokumen</h4>
+            <div style="display:grid;gap:10px;font-size:14px;">
+              <div style="display:flex;justify-content:space-between;gap:8px;"><span class="text-muted">Status:</span><span id="resStatusBadge" class="badge badge-green">COMPLETED</span></div>
+              <div style="display:flex;justify-content:space-between;gap:8px;"><span class="text-muted">Jumlah Kata:</span><strong id="resWordCount">0</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:8px;"><span class="text-muted">Jumlah Karakter:</span><strong id="resCharCount">0</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:8px;"><span class="text-muted">Sumber Cocok:</span><strong id="resSourceCount">0</strong></div>
+              <div style="display:flex;justify-content:space-between;gap:8px;"><span class="text-muted">Mesin Analisis:</span><strong id="resProviderName" style="font-size:12px;text-align:right;">-</strong></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 style="font-size:14.5px;margin-bottom:10px;">Distribusi Kemiripan</h4>
+            <div class="chart-box"><canvas id="resultDistChart" height="165"></canvas></div>
+          </div>
+        </div>
+
+        <div id="resPolicyAlert" style="background:#EFF6FF;border:1px solid #BFDBFE;color:#1E3A8A;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:20px;"></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size:16px;margin-bottom:12px;">Highlight Bagian Teks</h3>
+            <div class="highlight-box" id="resHighlightedText"></div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;margin-bottom:12px;">Sumber Referensi Ditemukan</h3>
+            <div id="resSourcesList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="u-history" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+          <div>
+            <h2 style="font-size:22px;color:var(--navy);">Pencarian Plagiasi Saya</h2>
+            <p class="text-muted" style="font-size:14px;">Riwayat pemeriksaan pribadi Anda yang tersimpan di database.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" onclick="switchUserPage('u-check')">+ Periksa Dokumen Baru</button>
+        </div>
+
+        <div class="card table-wrap">
+          <table class="saas-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Nama Dokumen</th>
+                <th>Tanggal Pemeriksaan</th>
+                <th>Kemiripan</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="userHistoryTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="u-paraphrase" class="hidden">
+        <div style="margin-bottom:20px;">
+          <h2 style="font-size:22px;color:var(--navy);">Studio Parafrase Akademik</h2>
+          <p class="text-muted" style="font-size:14px;">Perbaiki struktur kalimat dengan tetap mempertahankan makna asli, istilah teknis, dan sitasi akademik.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="grid-2" style="margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Gaya Bahasa</label>
+              <select id="paraStyle" class="form-control">
+                <option value="Akademis">Akademis (Skripsi / Jurnal Ilmiah)</option>
+                <option value="Formal">Formal (Laporan Resmi)</option>
+                <option value="Profesional">Profesional (Artikel &amp; Publikasi)</option>
+                <option value="Sederhana">Sederhana dan Mudah Dipahami</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Tingkat Perubahan Kalimat</label>
+              <select id="paraIntensity" class="form-control">
+                <option value="Ringan">Ringan (Pertahankan struktur utama)</option>
+                <option value="Sedang" selected>Sedang (Seimbang &amp; natural)</option>
+                <option value="Tinggi">Tinggi (Restrukturisasi menyeluruh)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label class="form-label">Teks Asli</label>
+              <textarea id="paraInputText" class="form-control" placeholder="Masukkan atau tempel teks akademik yang ingin diparafrase..."></textarea>
+            </div>
+            <div>
+              <label class="form-label">Hasil Parafrase</label>
+              <textarea id="paraOutputText" class="form-control" readonly placeholder="Hasil parafrase akan muncul berdampingan di sini..."></textarea>
+            </div>
+          </div>
+
+          <div id="paraCitationNote" class="hidden" style="margin-top:14px;background:#FEF3C7;border:1px solid #FDE68A;color:#92400E;padding:10px 14px;border-radius:10px;font-size:13px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+            <button type="button" class="btn btn-primary" id="btnRunParaphrase" onclick="submitParaphrase()">Parafrase Sekarang</button>
+            <button type="button" class="btn btn-outline" onclick="copyParaphraseResult()">Copy Hasil</button>
+            <button type="button" class="btn btn-outline" onclick="resetParaphraseForm()">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="u-profile" class="hidden">
+        <div style="max-width:560px;">
+          <h2 style="font-size:22px;color:var(--navy);margin-bottom:18px;">Profil Saya</h2>
+          <div class="card">
+            <div class="form-group">
+              <label class="form-label">User ID</label>
+              <input type="text" id="profUserId" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status Langganan</label>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:#F8FAFC;">
+                <span id="profPlanText" class="fw-bold" style="font-size:13px;">Akun Dasar (Gratis)</span>
+                <button type="button" class="btn btn-primary btn-sm" onclick="openBriProModal()">Upgrade Pro ($1)</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Terdaftar</label>
+              <input type="email" id="profEmail" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap</label>
+              <input type="text" id="profNama" class="form-control" />
+            </div>
+            <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;" />
+            <div class="form-group">
+              <label class="form-label">Password Lama (Isi jika ingin mengganti password)</label>
+              <input type="password" id="profOldPass" class="form-control" maxlength="8" placeholder="Maksimal 8 karakter" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password Baru (4–8 karakter)</label>
+              <input type="password" id="profNewPass" class="form-control" maxlength="8" placeholder="Maksimal 8 karakter" />
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveUserProfile()">Simpan Perubahan Profil</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- VIEW 3: ADMINISTRATOR DASHBOARD SHELL -->
+  <div id="view-admin-app" class="app-shell hidden">
+    <div class="sidebar-backdrop" id="adminSidebarBackdrop" onclick="toggleMobileSidebar()"></div>
+    <aside class="sidebar" id="adminSidebar">
+      <div>
+        <div style="padding:0 10px 18px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:16px;">
+          <span class="badge badge-cyan" style="margin-bottom:6px;">ADMINISTRATOR</span>
+          <div id="sidebarAdminName" style="font-weight:700;font-size:15px;">Dwiky Hartanto</div>
+        </div>
+        <div class="sidebar-nav">
+          <button type="button" class="sidebar-item active" data-apage="a-dashboard" onclick="switchAdminPage('a-dashboard')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            <span>Dashboard</span>
+          </button>
+          <button type="button" class="sidebar-item" data-apage="a-users" onclick="switchAdminPage('a-users')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Data Pengguna</span>
+          </button>
+          <button type="button" class="sidebar-item" data-apage="a-checks" onclick="switchAdminPage('a-checks')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></svg>
+            <span>Data Pemeriksaan</span>
+          </button>
+          <button type="button" class="sidebar-item" data-apage="a-logs" onclick="switchAdminPage('a-logs')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Log Activity</span>
+          </button>
+          <button type="button" class="sidebar-item" data-apage="a-docs" onclick="switchAdminPage('a-docs')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            <span>Manajemen Dokumen</span>
+          </button>
+          <button type="button" class="sidebar-item" data-apage="a-settings" onclick="switchAdminPage('a-settings')">
+            <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Pengaturan Sistem</span>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="sidebar-item sidebar-logout" onclick="handleLogout()">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </button>
+    </aside>
+
+    <main class="main-workspace">
+      <section id="a-dashboard">
+        <h2 style="font-size:21px;color:var(--navy);margin-bottom:6px;">Dashboard Administrator</h2>
+        <p class="text-muted" style="font-size:14px;margin-bottom:22px;">Monitoring real-time pengguna, pemeriksaan plagiasi, dan aktivitas sistem.</p>
+
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="card"><div class="text-muted" style="font-size:12px;font-weight:600;">TOTAL PENGGUNA</div><div id="aStatUsers" style="font-size:24px;font-weight:800;margin-top:6px;">0</div></div>
+          <div class="card"><div class="text-muted" style="font-size:12px;font-weight:600;">TOTAL DOKUMEN DIPERIKSA</div><div id="aStatDocs" style="font-size:24px;font-weight:800;color:var(--blue);margin-top:6px;">0</div></div>
+          <div class="card"><div class="text-muted" style="font-size:12px;font-weight:600;">PEMERIKSAAN HARI INI</div><div id="aStatToday" style="font-size:24px;font-weight:800;color:var(--cyan);margin-top:6px;">0</div></div>
+          <div class="card"><div class="text-muted" style="font-size:12px;font-weight:600;">AKTIVITAS PARAFRASE</div><div id="aStatPara" style="font-size:24px;font-weight:800;margin-top:6px;">0</div></div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="card"><h4 style="margin-bottom:12px;">Grafik Pemeriksaan Bulanan</h4><div class="chart-box"><canvas id="adminChecksChart" height="180"></canvas></div></div>
+          <div class="card"><h4 style="margin-bottom:12px;">Pertumbuhan Pengguna</h4><div class="chart-box"><canvas id="adminUsersChart" height="180"></canvas></div></div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="card"><h4 style="margin-bottom:12px;">Grafik Pemeriksaan Bulanan</h4><canvas id="adminChecksChart" height="180"></canvas></div>
+          <div class="card"><h4 style="margin-bottom:12px;">Pertumbuhan Pengguna</h4><canvas id="adminUsersChart" height="180"></canvas></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card"><h4 style="margin-bottom:12px;">Pemeriksaan Terbaru</h4><div id="aRecentChecksList"></div></div>
+          <div class="card"><h4 style="margin-bottom:12px;">Pengguna Terbaru</h4><div id="aRecentUsersList"></div></div>
+        </div>
+      </section>
+
+      <section id="a-users" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;">
+          <h2 style="font-size:22px;color:var(--navy);">Manajemen Data Pengguna</h2>
+          <input type="text" id="adminUserSearch" class="form-control" style="max-width:280px;" placeholder="Cari nama atau email..." oninput="filterAdminUsers()" />
+        </div>
+        <div class="card table-wrap">
+          <table class="saas-table">
+            <thead><tr><th>User ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="adminUsersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="a-checks" class="hidden">
+        <h2 style="font-size:22px;color:var(--navy);margin-bottom:18px;">Seluruh Data Pemeriksaan Plagiasi</h2>
+        <div class="card table-wrap">
+          <table class="saas-table">
+            <thead><tr><th>ID</th><th>Pengguna</th><th>Dokumen</th><th>Tanggal</th><th>Kemiripan</th><th>Aksi</th></tr></thead>
+            <tbody id="adminChecksTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="a-logs" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+          <h2 style="font-size:22px;color:var(--navy);">Audit Log Activity Real-Time</h2>
+          <button type="button" class="btn btn-outline btn-sm" onclick="loadAdminLogs()">Refresh Log</button>
+        </div>
+        <div class="card table-wrap">
+          <table class="saas-table">
+            <thead><tr><th>ID Log</th><th>Waktu</th><th>Pengguna</th><th>Role</th><th>Aktivitas</th><th>Detail</th><th>Status</th></tr></thead>
+            <tbody id="adminLogsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="a-docs" class="hidden">
+        <h2 style="font-size:22px;color:var(--navy);margin-bottom:18px;">Manajemen Dokumen Google Drive</h2>
+        <div class="card table-wrap">
+          <table class="saas-table">
+            <thead><tr><th>Check ID</th><th>Owner ID</th><th>Nama File</th><th>Tipe</th><th>Ukuran</th><th>Status Drive</th><th>Aksi</th></tr></thead>
+            <tbody id="adminDocsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="a-settings" class="hidden">
+        <h2 style="font-size:22px;color:var(--navy);margin-bottom:18px;">Pengaturan Sistem &amp; Kredensial API</h2>
+        <div class="card" style="max-width:680px;">
+          <div class="form-group">
+            <label class="form-label">Penyedia API Pemeriksaan Plagiasi Eksternal</label>
+            <select id="setPlagProvider" class="form-control">
+              <option value="BUILT_IN_HYBRID">Plagisense Built-in Engine (Gratis Tanpa API Key)</option>
+              <option value="GOOGLE_CUSTOM_SEARCH">Google Custom Search JSON API (Web Index)</option>
+              <option value="WINSTON_AI">Winston AI Plagiarism API v2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">PLAGIARISM_API_KEY <span id="badgePlagKey" class="badge badge-amber">Belum Diatur</span></label>
+            <input type="password" id="setPlagKey" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah API Key tersimpan" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">GOOGLE_SEARCH_CX (Khusus Google Custom Search) <span id="badgeGoogleCx" class="badge badge-amber">Belum Diatur</span></label>
+            <input type="text" id="setGoogleCx" class="form-control" placeholder="Masukkan Programmable Search Engine ID (cx)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">PARAPHRASE_API_KEY (Google Gemini API Key) <span id="badgeParaKey" class="badge badge-amber">Belum Diatur</span></label>
+            <input type="password" id="setParaKey" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah API Key tersimpan" />
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Kuota Gratis Pengunjung</label>
+              <input type="number" id="setGuestQuota" class="form-control" min="0" max="20" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Maksimal Ukuran Upload (MB)</label>
+              <input type="number" id="setMaxSize" class="form-control" min="1" max="25" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan Kebijakan Penilaian Kemiripan</label>
+            <textarea id="setSimNote" class="form-control" style="min-height:80px;"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="saveAdminSettings()">Simpan Konfigurasi Sistem</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- REUSABLE PLAGIARISM CHECKER TEMPLATE -->
+  <template id="plagiarismCheckerTemplate">
+    <div>
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-mode="file" onclick="switchCheckerMode(this, 'file')">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Upload Dokumen (.DOCX / .PDF)</span>
+        </button>
+        <button type="button" class="tab-btn" data-mode="text" onclick="switchCheckerMode(this, 'text')">
+          <svg class="nav-icon" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+          <span>Masukkan Teks Langsung</span>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Dokumen</label>
+        <input type="text" class="form-control chk-doc-name" placeholder="Contoh: Bab 1 Pendahuluan - Analisis Sistem Informasi" />
+      </div>
+
+      <div class="chk-pane-file">
+        <div class="dropzone" onclick="triggerFileInput(this)" ondragover="handleDragOver(event, this)" ondragleave="handleDragLeave(this)" ondrop="handleFileDrop(event, this)">
+          <div style="display:inline-flex;padding:12px;border-radius:14px;background:#EFF6FF;color:var(--blue);margin-bottom:10px;">
+            <svg class="nav-icon" style="width:28px;height:28px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div style="font-weight:700;color:var(--navy);">Klik untuk memilih file atau seret dokumen ke sini</div>
+          <div class="text-muted chk-size-hint" style="font-size:13px;margin-top:4px;">Mendukung format Microsoft Word (.docx) dan PDF (.pdf) — Maksimal 10 MB (25 MB untuk Pro)</div>
+          <input type="file" class="hidden chk-file-input" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onchange="handleFileSelected(this)" />
+        </div>
+
+        <div class="file-preview-pill hidden chk-file-info">
+          <div style="min-width:0;word-break:break-word;">
+            <div class="fw-bold chk-file-name" style="font-size:14px;"></div>
+            <div class="text-muted chk-file-size" style="font-size:12px;"></div>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" onclick="clearSelectedFile(this)">Hapus / Ganti</button>
+        </div>
+      </div>
+
+      <div class="chk-pane-text hidden">
+        <div class="form-group">
+          <label class="form-label">Teks Dokumen Akademik</label>
+          <textarea class="form-control chk-raw-text" placeholder="Tempelkan paragraf skripsi, makalah, atau artikel jurnal Anda di sini (minimal 40 karakter)..."></textarea>
+        </div>
+      </div>
+
+      <div class="progress-track hidden chk-progress-wrap">
+        <div class="progress-fill chk-progress-bar"></div>
+      </div>
+      <div class="text-muted chk-status-text hidden" style="font-size:12px;margin-top:6px;"></div>
+
+      <div style="margin-top:18px;display:flex;justify-content:flex-end;">
+        <button type="button" class="btn btn-primary chk-submit-btn" onclick="submitPlagiarismCheck(this)">Periksa Sekarang</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- MODAL AUTH (LOGIN & REGISTER) -->
+  <div id="authModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 id="authModalTitle" style="font-size:20px;color:var(--navy);">Masuk ke Plagisense</h3>
+        <button type="button" onclick="closeAuthModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:4px;">✕</button>
+      </div>
+      <p id="authModalSubtitle" class="text-muted" style="font-size:13px;margin-bottom:18px;"></p>
+
+      <div id="authNameGroup" class="form-group hidden">
+        <label class="form-label">Nama Lengkap</label>
+        <input type="text" id="authNama" class="form-control" placeholder="Masukkan nama lengkap Anda" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Aktif</label>
+        <input type="email" id="authEmail" class="form-control" placeholder="nama@email.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password <span style="font-weight:400;color:var(--text-muted);">(Maksimal 8 karakter)</span></label>
+        <input type="password" id="authPassword" class="form-control" maxlength="8" placeholder="Maksimal 8 karakter" />
+      </div>
+      <div id="authConfirmGroup" class="form-group hidden">
+        <label class="form-label">Konfirmasi Password</label>
+        <input type="password" id="authConfirmPassword" class="form-control" maxlength="8" placeholder="Ulangi password Anda" />
+      </div>
+
+      <button type="button" id="authSubmitBtn" class="btn btn-primary" style="width:100%;margin-top:4px;margin-bottom:16px;" onclick="submitAuthForm()">Masuk</button>
+
+      <div style="text-align:center;font-size:13px;">
+        <span id="authSwitchPrompt">Belum punya akun?</span>
+        <a href="javascript:void(0)" id="authSwitchLink" class="text-blue fw-bold" onclick="toggleAuthMode()">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PEMBAYARAN PLAGISENSE PRO VIA BANK BRI -->
+  <div id="briProModal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:490px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;">
+        <div>
+          <span class="badge badge-blue" style="font-size:11px;">PLAGISENSE PRO • 30 HARI (RP 18.256 / $1)</span>
+          <h3 id="briModalHeading" style="font-size:19px;color:var(--navy);margin-top:4px;">Pilih Metode Pembayaran</h3>
+        </div>
+        <button type="button" onclick="closeBriProModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:4px;">✕</button>
+      </div>
+
+      <div id="briStepMethod">
+        <p class="text-muted" style="font-size:13px;margin-bottom:14px;">
+          Pilih metode pembayaran <strong>Bank BRI</strong> di bawah ini, lalu klik <strong>Bayar Sekarang</strong> untuk membuat tagihan otomatis (berlaku 24 jam).
+        </p>
+
+        <div id="briMethodOptionCard" class="bri-method-option selected" onclick="selectBriPaymentMethod()">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+            <svg width="42" height="42" style="flex-shrink:0;" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Logo Bank BRI">
+              <rect x="2" y="2" width="60" height="60" rx="12" fill="#00529C"/>
+              <path d="M14 16H27.5C31.8 16 34.5 18.2 34.5 21.8C34.5 24.4 32.9 26.3 30.4 27.1C33.4 27.8 35.4 30 35.4 33.1C35.4 37.2 32.2 39.8 27.3 39.8H14V16ZM20.2 25.2H26.1C27.8 25.2 28.8 24.3 28.8 22.8C28.8 21.3 27.8 20.5 26.1 20.5H20.2V25.2ZM20.2 35.2H26.5C28.4 35.2 29.5 34.2 29.5 32.6C29.5 31 28.4 30 26.5 30H20.2V35.2Z" fill="#FFFFFF"/>
+              <path d="M38 16H49.5C53.9 16 56.6 18.6 56.6 22.7C56.6 25.7 55 28 52.3 29L57.2 39.8H50.3L46.2 30H44.1V39.8H38V16ZM44.1 25.5H48.6C50.3 25.5 51.3 24.5 51.3 22.9C51.3 21.3 50.3 20.4 48.6 20.4H44.1V25.5Z" fill="#FFFFFF"/>
+              <rect x="14" y="44" width="43" height="5.5" rx="2.75" fill="#F37021"/>
+            </svg>
+            <div style="min-width:0;">
+              <div style="font-weight:800;font-size:16px;color:#00529C;">Bank BRI</div>
+              <div style="font-size:12px;color:#475569;">Verifikasi Mutasi Real-Time • Batas Bayar 24 Jam</div>
+              <div style="font-size:12px;font-weight:700;color:#F37021;margin-top:2px;">Nominal Transfer: Rp 18.256 ($1) • Tanpa Kode Unik</div>
+            </div>
+          </div>
+          <div id="briMethodCheckBadge" style="width:24px;height:24px;border-radius:50%;background:#00529C;color:#FFFFFF;display:grid;place-items:center;font-size:13px;font-weight:800;flex-shrink:0;">✓</div>
+        </div>
+
+        <button type="button" id="btnCreateBriOrder" class="btn btn-primary" style="width:100%;" onclick="goToBriPaymentDetails()">
+          Bayar Sekarang
+        </button>
+      </div>
+
+      <div id="briStepDetails" class="hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:12px;padding:10px 14px;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#92400E;">BATAS WAKTU PEMBAYARAN (24 JAM)</div>
+            <div id="briInvoiceIdText" style="font-size:11px;color:#B45309;font-family:monospace;">ID Tagihan: -</div>
+          </div>
+          <div id="briCountdownTimer" style="font-size:17px;font-weight:800;color:#B91C1C;font-family:monospace;">24:00:00</div>
+        </div>
+
+        <div class="bri-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;padding:7px 12px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+              <svg width="32" height="32" style="flex-shrink:0;" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Logo Bank BRI">
+                <rect x="2" y="2" width="60" height="60" rx="12" fill="#00529C"/>
+                <path d="M14 16H27.5C31.8 16 34.5 18.2 34.5 21.8C34.5 24.4 32.9 26.3 30.4 27.1C33.4 27.8 35.4 30 35.4 33.1C35.4 37.2 32.2 39.8 27.3 39.8H14V16ZM20.2 25.2H26.1C27.8 25.2 28.8 24.3 28.8 22.8C28.8 21.3 27.8 20.5 26.1 20.5H20.2V25.2ZM20.2 35.2H26.5C28.4 35.2 29.5 34.2 29.5 32.6C29.5 31 28.4 30 26.5 30H20.2V35.2Z" fill="#FFFFFF"/>
+                <path d="M38 16H49.5C53.9 16 56.6 18.6 56.6 22.7C56.6 25.7 55 28 52.3 29L57.2 39.8H50.3L46.2 30H44.1V39.8H38V16ZM44.1 25.5H48.6C50.3 25.5 51.3 24.5 51.3 22.9C51.3 21.3 50.3 20.4 48.6 20.4H44.1V25.5Z" fill="#FFFFFF"/>
+                <rect x="14" y="44" width="43" height="5.5" rx="2.75" fill="#F37021"/>
+              </svg>
+              <div style="line-height:1.1;">
+                <div style="font-weight:900;font-size:16px;color:#00529C;letter-spacing:0.03em;">BANK BRI</div>
+                <div style="font-size:9px;font-weight:700;color:#F37021;letter-spacing:0.02em;">MELAYANI DENGAN SETULUS HATI</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:11px;opacity:0.85;">Status Akun Saat Ini</div>
+              <div style="font-size:12px;font-weight:800;color:#FCD34D;">MENUNGGU PEMBAYARAN</div>
+            </div>
+          </div>
+
+          <div class="bri-norek-box">
+            <div style="min-width:0;">
+              <div style="font-size:11px;opacity:0.85;">Nomor Rekening BRI Tujuan</div>
+              <div id="briAccountNumberText" style="font-size:clamp(15px, 4.6vw, 18px);font-weight:800;letter-spacing:0.05em;font-family:monospace;word-break:break-all;">563401016180509</div>
+              <div style="font-size:13px;font-weight:700;color:#BAE6FD;margin-top:2px;">An. DWIKY HARTANTO</div>
+            </div>
+            <button type="button" class="bri-copy-btn" id="btnCopyBriNorek" onclick="copyBriAccountNumber()">Salin No. Rek</button>
+          </div>
+
+          <div class="bri-norek-box" style="margin-top:10px;background:rgba(243,112,33,0.22);border-color:rgba(252,211,77,0.55);">
+            <div style="min-width:0;">
+              <div style="font-size:11px;color:#FDE68A;font-weight:700;">Nominal Transfer (Tanpa Kode Unik)</div>
+              <div id="briExactAmountText" style="font-size:clamp(19px, 5.5vw, 22px);font-weight:800;color:#FFFFFF;font-family:monospace;">Rp 18.256</div>
+              <div style="font-size:11px;color:#E0F2FE;">Masukkan nominal Rp 18.256 (+ biaya admin/pajak bank bila ada)</div>
+            </div>
+            <button type="button" class="bri-copy-btn" id="btnCopyBriAmount" onclick="copyBriExactAmount()">Salin Nominal</button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+          <span class="live-radar-dot" style="margin-top:4px;"></span>
+          <div style="font-size:12px;color:#1E3A8A;line-height:1.45;">
+            <strong>Verifikasi Mutasi Real-Time Aktif:</strong> Sistem memantau rekening BRI <strong>563401016180509</strong> secara langsung. Begitu transaksi berhasil, akun Pro Anda otomatis aktif; jika transaksi gagal, akun tetap Gratis.
+          </div>
+        </div>
+
+        <div class="bri-guide-box">
+          <div style="font-weight:800;color:var(--navy);font-size:13px;">Langkah Pembayaran Bank BRI:</div>
+          <ol>
+            <li>Buka aplikasi <strong>BRImo</strong>, ATM BRI, atau Mobile Banking pilihan Anda.</li>
+            <li>Masukkan Nomor Rekening BRI tujuan <strong>563401016180509</strong> a.n. <strong>DWIKY HARTANTO</strong>.</li>
+            <li>Masukkan nominal <strong>Rp 18.256</strong> beserta pajak/biaya admin bank bila transfer dari bank lain.</li>
+            <li>Klik <strong>Lanjutkan</strong> dan masukkan <strong>PIN / Kode BRI</strong> Anda untuk menyelesaikan pembayaran.</li>
+          </ol>
+        </div>
+
+        <button type="button" class="btn btn-outline" style="width:100%;" onclick="closeBriProModal()">
+          Tutup Jendela (Pemantauan Tetap Berjalan)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFIKASI TENGAH LAYAR BERANIMASI SAAT PEMBAYARAN BERHASIL -->
+  <div id="paymentSuccessOverlay" class="payment-success-overlay hidden">
+    <div class="payment-success-card">
+      <div class="success-check-circle">
+        <svg class="success-check-svg" width="44" height="44" viewBox="0 0 52 52" fill="none">
+          <path d="M14 27L22 35L38 18" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="badge badge-pro-gold" style="margin-bottom:10px;">★ AKUN PRO LANGSUNG AKTIF</span>
+      <h2 style="font-size:22px;font-weight:800;color:var(--navy);line-height:1.35;margin-bottom:10px;">
+        Pembayaran Anda Berhasil
+      </h2>
+      <p class="text-muted" style="font-size:13px;margin-bottom:20px;">
+        Dana telah terverifikasi masuk ke rekening Bank BRI <strong>563401016180509 An. DWIKY HARTANTO</strong>. Akun <strong>Plagisense Pro</strong> Anda langsung aktif sekarang.
+      </p>
+      <button type="button" class="btn btn-primary" style="width:100%;" onclick="closePaymentSuccessOverlay()">
+        Mulai Nikmati Paket Pro
+      </button>
+    </div>
+  </div>
+
+  <!-- NOTIFIKASI TENGAH LAYAR BERANIMASI SAAT TRANSAKSI GAGAL -->
+  <div id="paymentFailureOverlay" class="payment-success-overlay hidden">
+    <div class="payment-failure-card">
+      <div class="failure-cross-circle">
+        <svg width="42" height="42" viewBox="0 0 52 52" fill="none">
+          <path d="M17 17L35 35M35 17L17 35" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="badge badge-red" style="margin-bottom:10px;">STATUS AKUN TETAP GRATIS</span>
+      <h2 style="font-size:22px;font-weight:800;color:#B91C1C;line-height:1.35;margin-bottom:10px;">
+        Transaksi Anda Gagal
+      </h2>
+      <p id="paymentFailureReasonText" class="text-muted" style="font-size:13px;margin-bottom:20px;">
+        Dana belum masuk ke rekening BRI <strong>563401016180509</strong> hingga batas waktu 24 jam berakhir. Akun Anda tetap pada paket <strong>Gratis</strong>. Silakan lakukan pemesanan langganan ulang.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <button type="button" class="btn btn-outline" style="flex:1 1 120px;" onclick="closePaymentFailureOverlay()">Tutup</button>
+        <button type="button" class="btn btn-primary" style="flex:1 1 140px;" onclick="retryProSubscription()">Langganan Ulang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TULIS ULASAN -->
+  <div id="writeReviewModal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:440px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="font-size:19px;color:var(--navy);">Tulis Ulasan Pengguna</h3>
+        <button type="button" onclick="closeWriteReviewModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);padding:4px;">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Peran / Profesi Akademik</label>
+        <input type="text" id="revRoleInput" class="form-control" placeholder="Contoh: Mahasiswa Skripsi / Dosen / Peneliti" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rating Layanan</label>
+        <select id="revRatingInput" class="form-control">
+          <option value="5" selected>★★★★★ (5/5 — Sangat Memuaskan)</option>
+          <option value="4">★★★★☆ (4/5 — Memuaskan)</option>
+          <option value="3">★★★☆☆ (3/5 — Cukup Baik)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ulasan Anda (Minimal 10 karakter)</label>
+        <textarea id="revCommentInput" class="form-control" style="min-height:100px;" placeholder="Bagikan pengalaman Anda menggunakan Plagisense..."></textarea>
+      </div>
+      <button type="button" id="btnSubmitReview" class="btn btn-primary" style="width:100%;" onclick="submitReviewForm()">Kirim Ulasan</button>
+    </div>
+  </div>
+
+  <!-- MODAL KONFIRMASI -->
+  <div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:400px;">
+      <h3 id="confirmTitle" style="font-size:18px;margin-bottom:8px;">Konfirmasi</h3>
+      <p id="confirmMessage" class="text-muted" style="font-size:14px;margin-bottom:20px;"></p>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeConfirmModal()">Batal</button>
+        <button type="button" class="btn btn-danger btn-sm" id="confirmProceedBtn">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script>
+    const STATE = {
+      token: localStorage.getItem("pls_token") || "",
+      user: JSON.parse(localStorage.getItem("pls_user") || "null"),
+      isPro: false,
+      guestId: getOrCreateGuestId(),
+      authMode: "login",
+      currentResult: null,
+      userChecksCache: [],
+      adminUsersCache: [],
+      charts: {}
+    };
+
+    function getOrCreateGuestId() {
+      let id = localStorage.getItem("pls_guest_id");
+      if (!id) {
+        id = "GST-" + Math.random().toString(36).substring(2, 10).toUpperCase() + Date.now().toString(36).toUpperCase();
+        localStorage.setItem("pls_guest_id", id);
+      }
+      return id;
+    }
+
+    function callBackend(action, payload = {}) {
+      return new Promise((resolve, reject) => {
+        if (typeof google === "undefined" || !google.script || !google.script.run) {
+          reject(new Error("Lingkungan Google Apps Script belum siap."));
+          return;
+        }
+        const reqStr = JSON.stringify({
+          action: action,
+          token: STATE.token,
+          payload: payload,
+          clientMeta: navigator.userAgent.slice(0, 60)
+        });
+
+        google.script.run
+          .withSuccessHandler((resStr) => {
+            try {
+              const parsed = JSON.parse(resStr);
+              if (parsed.ok) resolve(parsed.data);
+              else reject(new Error(parsed.error || "Terjadi kesalahan."));
+            } catch (e) {
+              reject(new Error("Gagal memproses respons server."));
+            }
+          })
+          .withFailureHandler((err) => {
+            reject(new Error((err && err.message) || "Koneksi ke server gagal."));
+          })
+          .apiGateway(reqStr);
+      });
+    }
+
+    function showToast(msg, type = "info") {
+      const box = document.getElementById("toastContainer");
+      if (!box) return;
+      const el = document.createElement("div");
+      el.className = "toast " + type;
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => { el.remove(); }, 4500);
+    }
+
+    function formatRibuan(angka) {
+      return Number(angka || 0).toLocaleString("id-ID");
+    }
+
+    function escapeHtmlClient(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      mountCheckerWidgets();
+      syncNavbarAuth();
+      loadPublicStatsAndReviews();
+      refreshGuestQuota();
+
+      if (STATE.token) {
+        try {
+          const validSess = await callBackend("getSession");
+          if (validSess) {
+            STATE.user = {
+              User_ID: validSess.userId,
+              Nama: validSess.nama,
+              Email: validSess.email,
+              Role: validSess.role
+            };
+            localStorage.setItem("pls_user", JSON.stringify(STATE.user));
+            await syncUserProStatus();
+            syncNavbarAuth();
+            checkPendingPaymentOnLoad();
+            goToMyDashboard();
+            return;
+          }
+        } catch (e) {}
+        clearLocalAuth();
+      }
+      syncNavbarAuth();
+    });
+
+    function mountCheckerWidgets() {
+      const tpl = document.getElementById("plagiarismCheckerTemplate");
+      if (!tpl) return;
+      ["guestPlagiarismMount", "userPlagiarismMount"].forEach(targetId => {
+        const container = document.getElementById(targetId);
+        if (container) {
+          container.innerHTML = "";
+          const clone = tpl.content.cloneNode(true);
+          container.appendChild(clone);
+        }
+      });
+    }
+
+    function renderReviewsMarquee(reviewsList) {
+      const track = document.getElementById("reviewsMarqueeTrack");
+      if (!track || !reviewsList || !reviewsList.length) return;
+
+      const doubled = reviewsList.concat(reviewsList);
+      track.innerHTML = doubled.map(function(rev) {
+        const stars = "★".repeat(rev.rating || 5) + "☆".repeat(5 - (rev.rating || 5));
+        const proTag = rev.isPro ? '<span class="review-pro-tag">PRO MEMBER</span>' : '';
+        return `
+          <div class="review-card">
+            <div class="review-header">
+              <span class="review-stars">${stars}</span>
+              ${proTag}
+            </div>
+            <p style="font-size:14px;color:#334155;line-height:1.55;margin-bottom:12px;">"${escapeHtmlClient(rev.comment)}"</p>
+            <div style="font-weight:700;font-size:14px;color:#0F172A;">${escapeHtmlClient(rev.name)}</div>
+            <div style="font-size:12px;color:#64748B;">${escapeHtmlClient(rev.role)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadPublicStatsAndReviews() {
+      try {
+        const stats = await callBackend("getPublicStats");
+        document.getElementById("statTotalUsers").textContent = formatRibuan(stats.totalUsers);
+        document.getElementById("statTotalDocs").textContent = formatRibuan(stats.totalDocsChecked || stats.totalDocuments);
+        document.getElementById("statSuccessChecks").textContent = formatRibuan(stats.totalSuccessChecks || stats.successfulChecks);
+        document.getElementById("statTotalReviews").textContent = formatRibuan(stats.totalReviews);
+        document.getElementById("badgeReviewCount").textContent = formatRibuan(stats.totalReviews);
+        if (stats.reviews) renderReviewsMarquee(stats.reviews);
+      } catch (e) {}
+    }
+
+    async function refreshGuestQuota() {
+      const badge = document.getElementById("guestQuotaBadge");
+      if (!badge) return;
+      try {
+        const q = await callBackend("checkGuestQuota", { guestId: STATE.guestId });
+        badge.textContent = `Sisa Kesempatan: ${q.remaining} / ${q.max}`;
+        badge.className = q.remaining > 0 ? "badge badge-blue" : "badge badge-red";
+      } catch (e) {
+        badge.textContent = "Sisa Kesempatan: 2 / 2";
+        badge.className = "badge badge-blue";
+      }
+    }
+
+    // AUTHENTICATION MODAL & FLOW
+    function openAuthModal(mode = "login", customSubtitle = "") {
+      STATE.authMode = mode;
+      const isReg = mode === "register";
+      document.getElementById("authModalTitle").textContent = isReg ? "Daftar Akun Baru" : "Masuk ke Plagisense";
+      document.getElementById("authModalSubtitle").textContent = customSubtitle || (isReg
+        ? "Buat akun gratis untuk menyimpan riwayat pemeriksaan plagiasi dan akses parafrase akademik."
+        : "Masuk menggunakan email dan password Anda untuk mengakses dashboard.");
+      document.getElementById("authNameGroup").classList.toggle("hidden", !isReg);
+      document.getElementById("authConfirmGroup").classList.toggle("hidden", !isReg);
+      document.getElementById("authSubmitBtn").textContent = isReg ? "Daftar Sekarang" : "Masuk";
+      document.getElementById("authSwitchPrompt").textContent = isReg ? "Sudah punya akun?" : "Belum punya akun?";
+      document.getElementById("authSwitchLink").textContent = isReg ? "Masuk" : "Daftar";
+      document.getElementById("authModal").classList.remove("hidden");
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.add("hidden");
+    }
+
+    function toggleAuthMode() {
+      openAuthModal(STATE.authMode === "login" ? "register" : "login");
+    }
+
+    async function submitAuthForm() {
+      const btn = document.getElementById("authSubmitBtn");
+      const nama = document.getElementById("authNama").value.trim();
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      const confirmPassword = document.getElementById("authConfirmPassword").value;
+
+      if (!email || !password) {
+        return showToast("Email dan password wajib diisi.", "error");
+      }
+
+      btn.disabled = true;
+      btn.textContent = STATE.authMode === "register" ? "Mendaftarkan..." : "Memverifikasi...";
+
+      try {
+        if (STATE.authMode === "register") {
+          await callBackend("register", { nama, email, password, confirmPassword });
+          showToast("Registrasi berhasil! Silakan masuk dengan akun Anda.", "success");
+          openAuthModal("login", "Akun berhasil dibuat. Silakan login untuk melanjutkan.");
+        } else {
+          const res = await callBackend("login", { email, password });
+          STATE.token = res.token;
+          STATE.user = res.user;
+          localStorage.setItem("pls_token", res.token);
+          localStorage.setItem("pls_user", JSON.stringify(res.user));
+          closeAuthModal();
+          await syncUserProStatus();
+          syncNavbarAuth();
+          showToast("Selamat datang kembali, " + res.user.Nama + "!", "success");
+          checkPendingPaymentOnLoad();
+          goToMyDashboard();
+        }
+      } catch (e) {
+        showToast(e.message, "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = STATE.authMode === "register" ? "Daftar Sekarang" : "Masuk";
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        if (STATE.token) await callBackend("logout");
+      } catch (e) {}
+      stopBriLiveMonitoring();
+      clearLocalAuth();
+      syncNavbarAuth();
+      navigateTo("landing");
+      showToast("Anda telah berhasil logout.", "info");
+    }
+
+    function clearLocalAuth() {
+      STATE.token = "";
+      STATE.user = null;
+      STATE.isPro = false;
+      localStorage.removeItem("pls_token");
+      localStorage.removeItem("pls_user");
+    }
+
+    function syncNavbarAuth() {
+      const isLoggedIn = Boolean(STATE.token && STATE.user);
+      document.getElementById("navGuestActions").classList.toggle("hidden", isLoggedIn);
+      document.getElementById("navUserActions").classList.toggle("hidden", !isLoggedIn);
+      if (isLoggedIn) {
+        document.getElementById("navUserGreeting").textContent = "Halo, " + STATE.user.Nama;
+      }
+      updateProUiBadges();
+    }
+
+    // NAVIGATION & DASHBOARD VIEWS
+    function navigateTo(viewName) {
+      document.getElementById("view-landing").classList.toggle("hidden", viewName !== "landing");
+      document.getElementById("view-user-app").classList.toggle("hidden", viewName !== "user");
+      document.getElementById("view-admin-app").classList.toggle("hidden", viewName !== "admin");
+      document.getElementById("landingNavLinks").classList.toggle("hidden", viewName !== "landing");
+      document.getElementById("drawerToggleBtn").classList.toggle("hidden", viewName === "landing");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goToMyDashboard() {
+      if (!STATE.user) return openAuthModal("login");
+      if (String(STATE.user.Role).toLowerCase() === "admin") {
+        navigateTo("admin");
+        document.getElementById("sidebarAdminName").textContent = STATE.user.Nama;
+        switchAdminPage("a-dashboard");
+      } else {
+        navigateTo("user");
+        document.getElementById("sidebarUserName").textContent = STATE.user.Nama;
+        document.getElementById("sidebarUserEmail").textContent = STATE.user.Email;
+        document.getElementById("welcomeUserTitle").textContent = "Selamat datang, " + STATE.user.Nama;
+        document.getElementById("profUserId").value = STATE.user.User_ID;
+        document.getElementById("profEmail").value = STATE.user.Email;
+        document.getElementById("profNama").value = STATE.user.Nama;
+        switchUserPage("u-dashboard");
+      }
+    }
+
+    function toggleMobileSidebar() {
+      const isAdmin = STATE.user && String(STATE.user.Role).toLowerCase() === "admin";
+      const sb = document.getElementById(isAdmin ? "adminSidebar" : "userSidebar");
+      const bd = document.getElementById(isAdmin ? "adminSidebarBackdrop" : "userSidebarBackdrop");
+      if (sb && bd) {
+        sb.classList.toggle("open");
+        bd.classList.toggle("open");
+      }
+    }
+
+    function closeMobileSidebarIfOpen() {
+      ["userSidebar", "adminSidebar"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("open");
+      });
+      ["userSidebarBackdrop", "adminSidebarBackdrop"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("open");
+      });
+    }
+
+    function switchUserPage(pageId) {
+      closeMobileSidebarIfOpen();
+      ["u-dashboard", "u-check", "u-result", "u-history", "u-paraphrase", "u-profile"].forEach(id => {
+        document.getElementById(id).classList.toggle("hidden", id !== pageId);
+      });
+      document.querySelectorAll("#userSidebar .sidebar-item[data-upage]").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-upage") === pageId);
+      });
+      if (pageId === "u-dashboard") loadUserDashboard();
+      if (pageId === "u-history") loadUserHistory();
+    }
+
+    function switchAdminPage(pageId) {
+      closeMobileSidebarIfOpen();
+      ["a-dashboard", "a-users", "a-checks", "a-logs", "a-docs", "a-settings"].forEach(id => {
+        document.getElementById(id).classList.toggle("hidden", id !== pageId);
+      });
+      document.querySelectorAll("#adminSidebar .sidebar-item[data-apage]").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-apage") === pageId);
+      });
+      if (pageId === "a-dashboard") loadAdminDashboard();
+      if (pageId === "a-users") loadAdminUsers();
+      if (pageId === "a-checks") loadAdminChecks();
+      if (pageId === "a-logs") loadAdminLogs();
+      if (pageId === "a-docs") loadAdminDocs();
+      if (pageId === "a-settings") loadAdminSettings();
+    }
+
+    function openQuickChecker() {
+      if (STATE.token && STATE.user && String(STATE.user.Role).toLowerCase() !== "admin") {
+        navigateTo("user");
+        switchUserPage("u-check");
+      } else {
+        navigateTo("landing");
+        const sec = document.getElementById("quick-checker-section");
+        if (sec) sec.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    // PRO SUBSCRIPTION & REAL-TIME BANK BRI PAYMENT
+    async function syncUserProStatus() {
+      if (!STATE.token) {
+        STATE.isPro = false;
+        return;
+      }
+      try {
+        const pro = await callBackend("checkProStatus");
+        STATE.isPro = Boolean(pro && pro.isPro);
+      } catch (e) {
+        STATE.isPro = false;
+      }
+      updateProUiBadges();
+    }
+
+    function updateProUiBadges() {
+      const navPro = document.getElementById("navProBadge");
+      const sideBadge = document.getElementById("sidebarPlanBadge");
+      const profPlan = document.getElementById("profPlanText");
+      const dashUpgradeBtn = document.getElementById("dashUpgradeProBtn");
+
+      if (STATE.isPro) {
+        if (navPro) navPro.classList.remove("hidden");
+        if (sideBadge) {
+          sideBadge.textContent = "PRO MEMBER";
+          sideBadge.className = "badge badge-pro-gold";
+        }
+        if (profPlan) profPlan.textContent = "Plagisense Pro (Aktif — Kapasitas 25 MB & 25.000 Karakter)";
+        if (dashUpgradeBtn) dashUpgradeBtn.textContent = "★ Paket Plagisense Pro Aktif";
+      } else {
+        if (navPro) navPro.classList.add("hidden");
+        if (sideBadge) {
+          sideBadge.textContent = "FREE";
+          sideBadge.className = "badge badge-cyan";
+        }
+        if (profPlan) profPlan.textContent = "Akun Dasar (Gratis)";
+        if (dashUpgradeBtn) dashUpgradeBtn.textContent = "★ Upgrade Plagisense Pro — Rp 18.256 ($1)";
+      }
+    }
+
+    let briMethodSelected = true;
+    let activeBriOrder = null;
+    let briCountdownInterval = null;
+    let briPollingInterval = null;
+
+    function openBriProModal() {
+      if (!STATE.token || !STATE.user) {
+        openAuthModal("login", "Silakan Login atau Daftar akun terlebih dahulu sebelum berlangganan Plagisense Pro (Rp 18.256 / $1).");
+        return;
+      }
+      if (STATE.isPro) {
+        showToast("Akun Anda sudah berstatus Plagisense Pro Aktif.", "success");
+        return;
+      }
+
+      if (activeBriOrder && activeBriOrder.status === "PENDING" && activeBriOrder.remainingSeconds > 0) {
+        renderActiveBriInvoice(activeBriOrder);
+        document.getElementById("briProModal").classList.remove("hidden");
+        return;
+      }
+
+      briMethodSelected = true;
+      document.getElementById("briModalHeading").textContent = "Pilih Metode Pembayaran";
+      document.getElementById("briStepMethod").classList.remove("hidden");
+      document.getElementById("briStepDetails").classList.add("hidden");
+      document.getElementById("briMethodOptionCard").classList.add("selected");
+      document.getElementById("briProModal").classList.remove("hidden");
+    }
+
+    function selectBriPaymentMethod() {
+      briMethodSelected = true;
+      document.getElementById("briMethodOptionCard").classList.add("selected");
+    }
+
+    async function goToBriPaymentDetails() {
+      if (!briMethodSelected) {
+        return showToast("Silakan pilih metode pembayaran Bank BRI terlebih dahulu.", "error");
+      }
+
+      const btn = document.getElementById("btnCreateBriOrder");
+      btn.disabled = true;
+      btn.textContent = "Membuat Tagihan 24 Jam...";
+
+      try {
+        const order = await callBackend("createProPaymentOrder", {
+          paymentMethod: "Bank BRI (563401016180509 - DWIKY HARTANTO)"
+        });
+        activeBriOrder = order;
+        renderActiveBriInvoice(order);
+        startBriLiveMonitoring(order.subId, order.paymentDeadline);
+      } catch (e) {
+        showToast(e.message, "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Bayar Sekarang";
+      }
+    }
+
+    function renderActiveBriInvoice(order) {
+      document.getElementById("briModalHeading").textContent = "Menunggu Pembayaran Bank BRI";
+      document.getElementById("briStepMethod").classList.add("hidden");
+      document.getElementById("briStepDetails").classList.remove("hidden");
+      document.getElementById("briInvoiceIdText").textContent = "ID Tagihan: " + order.subId;
+      document.getElementById("briExactAmountText").textContent = "Rp " + formatRibuan(order.exactAmountIdr);
+    }
+
+    function startBriLiveMonitoring(subId, deadlineIso) {
+      stopBriLiveMonitoring();
+      const deadlineMs = new Date(deadlineIso).getTime();
+
+      function updateTimerTick() {
+        const nowMs = Date.now();
+        const diffSec = Math.floor((deadlineMs - nowMs) / 1000);
+        if (diffSec <= 0) {
+          const tEl = document.getElementById("briCountdownTimer");
+          if (tEl) tEl.textContent = "00:00:00";
+          handleBriTransactionFailed("Waktu pembayaran 24 jam telah habis dan dana belum masuk ke rekening BRI. Akun Anda tetap Akun Dasar (Gratis). Silakan lakukan langganan ulang.", subId);
+          return;
+        }
+        if (activeBriOrder) activeBriOrder.remainingSeconds = diffSec;
+        const hrs = String(Math.floor(diffSec / 3600)).padStart(2, "0");
+        const mins = String(Math.floor((diffSec % 3600) / 60)).padStart(2, "0");
+        const secs = String(diffSec % 60).padStart(2, "0");
+        const timerEl = document.getElementById("briCountdownTimer");
+        if (timerEl) timerEl.textContent = `${hrs}:${mins}:${secs}`;
+      }
+
+      updateTimerTick();
+      briCountdownInterval = setInterval(updateTimerTick, 1000);
+
+      briPollingInterval = setInterval(async () => {
+        if (!STATE.token) {
+          stopBriLiveMonitoring();
+          return;
+        }
+        try {
+          const statusRes = await callBackend("checkProPaymentStatus", { subId: subId });
+          if (statusRes.status === "ACTIVE" && statusRes.isPro) {
+            stopBriLiveMonitoring();
+            activeBriOrder = null;
+            closeBriProModal();
+            STATE.isPro = true;
+            await syncUserProStatus();
+            syncNavbarAuth();
+            document.getElementById("paymentSuccessOverlay").classList.remove("hidden");
+          } else if (statusRes.status === "FAILED") {
+            handleBriTransactionFailed(statusRes.message, statusRes.subId || subId);
+          }
+        } catch (err) {}
+      }, 2500);
+    }
+
+    function stopBriLiveMonitoring() {
+      if (briCountdownInterval) {
+        clearInterval(briCountdownInterval);
+        briCountdownInterval = null;
+      }
+      if (briPollingInterval) {
+        clearInterval(briPollingInterval);
+        briPollingInterval = null;
+      }
+    }
+
+    function handleBriTransactionFailed(reasonMsg, subId) {
+      stopBriLiveMonitoring();
+      activeBriOrder = null;
+      STATE.isPro = false;
+      updateProUiBadges();
+      syncNavbarAuth();
+      closeBriProModal();
+      if (subId) {
+        localStorage.setItem("pls_notified_fail_" + subId, "1");
+      }
+      const reasonEl = document.getElementById("paymentFailureReasonText");
+      if (reasonEl && reasonMsg) reasonEl.textContent = reasonMsg;
+      document.getElementById("paymentFailureOverlay").classList.remove("hidden");
+    }
+
+    async function checkPendingPaymentOnLoad() {
+      if (!STATE.token || STATE.isPro) return;
+      try {
+        const res = await callBackend("checkProPaymentStatus", {});
+        if (res.status === "ACTIVE" && res.isPro) {
+          STATE.isPro = true;
+          await syncUserProStatus();
+          syncNavbarAuth();
+          document.getElementById("paymentSuccessOverlay").classList.remove("hidden");
+        } else if (res.status === "PENDING" && res.remainingSeconds > 0) {
+          activeBriOrder = res;
+          startBriLiveMonitoring(res.subId, res.paymentDeadline);
+        } else if (res.status === "FAILED" && res.subId) {
+          const seenKey = "pls_notified_fail_" + res.subId;
+          if (!localStorage.getItem(seenKey)) {
+            handleBriTransactionFailed(res.message, res.subId);
+          }
+        }
+      } catch (e) {}
+    }
+
+    function closeBriProModal() {
+      document.getElementById("briProModal").classList.add("hidden");
+    }
+
+    function copyTextFallback_(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+    }
+
+    function copyBriAccountNumber() {
+      copyTextFallback_("563401016180509");
+      const btn = document.getElementById("btnCopyBriNorek");
+      btn.textContent = "Tersalin ✓";
+      showToast("Nomor Rekening BRI 563401016180509 (DWIKY HARTANTO) disalin.", "success");
+      setTimeout(() => { btn.textContent = "Salin No. Rek"; }, 2500);
+    }
+
+    function copyBriExactAmount() {
+      if (!activeBriOrder) return;
+      const nominal = String(activeBriOrder.exactAmountIdr);
+      copyTextFallback_(nominal);
+      const btn = document.getElementById("btnCopyBriAmount");
+      btn.textContent = "Tersalin ✓";
+      showToast("Nominal tepat Rp " + formatRibuan(nominal) + " disalin.", "success");
+      setTimeout(() => { btn.textContent = "Salin Nominal"; }, 2500);
+    }
+
+    function closePaymentSuccessOverlay() {
+      document.getElementById("paymentSuccessOverlay").classList.add("hidden");
+      goToMyDashboard();
+    }
+
+    function closePaymentFailureOverlay() {
+      document.getElementById("paymentFailureOverlay").classList.add("hidden");
+    }
+
+    function retryProSubscription() {
+      closePaymentFailureOverlay();
+      openBriProModal();
+    }
+
+    // PLAGIARISM CHECKER WIDGET INTERACTIONS
+    function switchCheckerMode(tabBtn, mode) {
+      const root = tabBtn.closest("div").parentElement;
+      root.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      tabBtn.classList.add("active");
+      root.querySelector(".chk-pane-file").classList.toggle("hidden", mode !== "file");
+      root.querySelector(".chk-pane-text").classList.toggle("hidden", mode !== "text");
+      root.dataset.activeMode = mode;
+    }
+
+    function triggerFileInput(dropzoneEl) {
+      const input = dropzoneEl.querySelector(".chk-file-input");
+      if (input) input.click();
+    }
+
+    function handleDragOver(e, el) {
+      e.preventDefault();
+      el.classList.add("dragover");
+    }
+
+    function handleDragLeave(el) {
+      el.classList.remove("dragover");
+    }
+
+    function handleFileDrop(e, el) {
+      e.preventDefault();
+      el.classList.remove("dragover");
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        const input = el.querySelector(".chk-file-input");
+        input.files = files;
+        handleFileSelected(input);
+      }
+    }
+
+    function handleFileSelected(inputEl) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const maxMb = STATE.isPro ? 25 : 10;
+      if (file.size > maxMb * 1024 * 1024) {
+        inputEl.value = "";
+        return showToast(`Ukuran file melebihi batas maksimal ${maxMb} MB.`, "error");
+      }
+      const root = inputEl.closest(".chk-pane-file").parentElement;
+      const docNameInput = root.querySelector(".chk-doc-name");
+      if (!docNameInput.value.trim()) {
+        docNameInput.value = file.name.replace(/\.[^/.]+$/, "");
+      }
+      root.querySelector(".chk-file-name").textContent = file.name;
+      root.querySelector(".chk-file-size").textContent = (file.size / 1024).toFixed(1) + " KB • " + (file.type || "Dokumen");
+      root.querySelector(".chk-file-info").classList.remove("hidden");
+    }
+
+    function clearSelectedFile(btn) {
+      const root = btn.closest(".chk-pane-file").parentElement;
+      root.querySelector(".chk-file-input").value = "";
+      root.querySelector(".chk-file-info").classList.add("hidden");
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = String(reader.result || "").split(",")[1] || "";
+          resolve(base64);
+        };
+        reader.onerror = () => reject(new Error("Gagal membaca file dokumen."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function submitPlagiarismCheck(btn) {
+      const root = btn.closest("div").parentElement;
+      const mode = root.dataset.activeMode || "file";
+      const docName = root.querySelector(".chk-doc-name").value.trim() || "Dokumen Akademik";
+      const progWrap = root.querySelector(".chk-progress-wrap");
+      const progBar = root.querySelector(".chk-progress-bar");
+      const statusTxt = root.querySelector(".chk-status-text");
+
+      let payload = {
+        mode: mode,
+        documentName: docName,
+        guestId: STATE.guestId
+      };
+
+      if (mode === "file") {
+        const fileInput = root.querySelector(".chk-file-input");
+        const file = fileInput.files[0];
+        if (!file) return showToast("Silakan pilih file .docx atau .pdf terlebih dahulu.", "error");
+        payload.fileName = file.name;
+        payload.fileMime = file.type || (file.name.endsWith(".pdf") ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        payload.fileData = await readFileAsBase64(file);
+      } else {
+        const rawText = root.querySelector(".chk-raw-text").value.trim();
+        if (rawText.length < 40) return showToast("Masukkan minimal 40 karakter teks untuk dianalisis.", "error");
+        payload.text = rawText;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Memproses Dokumen...";
+      progWrap.classList.remove("hidden");
+      statusTxt.classList.remove("hidden");
+      progBar.style.width = "30%";
+      statusTxt.textContent = "Mengunggah & mengekstrak teks dokumen...";
+
+      const timer = setInterval(() => {
+        const cur = parseFloat(progBar.style.width) || 30;
+        if (cur < 88) progBar.style.width = (cur + 12) + "%";
+      }, 600);
+
+      try {
+        const res = await callBackend("runPlagiarismCheck", payload);
+        clearInterval(timer);
+        progBar.style.width = "100%";
+        statusTxt.textContent = "Analisis selesai!";
+
+        if (res.guestQuota) {
+          const badge = document.getElementById("guestQuotaBadge");
+          if (badge) {
+            badge.textContent = `Sisa Kesempatan: ${res.guestQuota.remaining} / ${res.guestQuota.max}`;
+            badge.className = res.guestQuota.remaining > 0 ? "badge badge-blue" : "badge badge-red";
+          }
+        }
+
+        STATE.currentResult = res.result;
+        loadPublicStatsAndReviews();
+
+        if (STATE.token && STATE.user) {
+          navigateTo("user");
+          switchUserPage("u-result");
+          renderPlagiarismResult(res.result);
+        } else {
+          showGuestResultInline(root, res.result);
+        }
+        showToast("Pemeriksaan plagiasi selesai!", "success");
+      } catch (e) {
+        clearInterval(timer);
+        if (String(e.message).indexOf("QUOTA_EXCEEDED") !== -1) {
+          openAuthModal("register", "Kesempatan pemeriksaan gratis 2x untuk pengunjung telah habis. Daftar gratis sekarang untuk melanjutkan!");
+        } else {
+          showToast(e.message, "error");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Periksa Sekarang";
+        setTimeout(() => {
+          progWrap.classList.add("hidden");
+          statusTxt.classList.add("hidden");
+          progBar.style.width = "0%";
+        }, 1200);
+      }
+    }
+
+    function showGuestResultInline(root, result) {
+      let box = root.querySelector(".guest-inline-result");
+      if (!box) {
+        box = document.createElement("div");
+        box.className = "guest-inline-result";
+        box.style.marginTop = "24px";
+        box.style.paddingTop = "20px";
+        box.style.borderTop = "1px solid var(--border)";
+        root.appendChild(box);
+      }
+      const highlighted = (result.segments || []).map(seg =>
+        seg.matched ? `<span class="seg-matched">${escapeHtmlClient(seg.text)}</span>` : escapeHtmlClient(seg.text)
+      ).join(" ");
+
+      box.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+          <div>
+            <h3 style="font-size:18px;color:var(--navy);">Hasil Pemeriksaan: ${escapeHtmlClient(result.documentName)}</h3>
+            <span class="text-muted" style="font-size:12px;">${result.totalWords} Kata • Mesin: ${escapeHtmlClient(result.provider)}</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <span class="badge badge-amber" style="font-size:13px;padding:6px 12px;">Kemiripan: ${result.similarityPercentage}%</span>
+            <span class="badge badge-green" style="font-size:13px;padding:6px 12px;">Unik: ${result.uniquePercentage}%</span>
+          </div>
+        </div>
+        <div class="highlight-box" style="margin-bottom:14px;">${highlighted}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <span class="text-muted" style="font-size:12px;">Daftar akun gratis untuk menyimpan riwayat, mengunduh sertifikat PDF, dan menggunakan Studio Parafrase.</span>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openAuthModal('register')">Daftar &amp; Simpan Laporan</button>
+        </div>
+      `;
+    }
+
+    function renderPlagiarismResult(result) {
+      if (!result) return;
+      STATE.currentResult = result;
+
+      document.getElementById("resDocMeta").textContent = `${result.documentName} • ID: ${result.checkId} • ${new Date(result.createdAt).toLocaleString("id-ID")}`;
+      document.getElementById("resSimPct").textContent = result.similarityPercentage + "%";
+      document.getElementById("resUniquePct").textContent = result.uniquePercentage + "%";
+      document.getElementById("resWordCount").textContent = formatRibuan(result.totalWords);
+      document.getElementById("resCharCount").textContent = formatRibuan(result.totalChars);
+      document.getElementById("resSourceCount").textContent = result.matchedSourcesCount || (result.sources ? result.sources.length : 0);
+      document.getElementById("resProviderName").textContent = result.provider || "-";
+      document.getElementById("resPolicyAlert").textContent = result.policyNote || "";
+
+      const circumference = 2 * Math.PI * 66;
+      const offset = circumference - (Number(result.similarityPercentage || 0) / 100) * circumference;
+      const circle = document.getElementById("resCircleBar");
+      circle.style.strokeDashoffset = offset;
+      circle.style.stroke = result.similarityPercentage > 25 ? "#EF4444" : (result.similarityPercentage > 10 ? "#F59E0B" : "#10B981");
+
+      const hlBox = document.getElementById("resHighlightedText");
+      hlBox.innerHTML = (result.segments || []).map(seg =>
+        seg.matched ? `<span class="seg-matched" title="Terdeteksi cocok">${escapeHtmlClient(seg.text)}</span>` : escapeHtmlClient(seg.text)
+      ).join(" ");
+
+      const srcList = document.getElementById("resSourcesList");
+      if (!result.sources || result.sources.length === 0) {
+        srcList.innerHTML = `<div class="text-muted" style="font-size:14px;padding:12px 0;">Tidak ditemukan sumber eksternal maupun arsip internal yang cocok secara signifikan.</div>`;
+      } else {
+        srcList.innerHTML = result.sources.map(src => `
+          <div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;">
+              <strong style="font-size:13px;color:var(--navy);">${escapeHtmlClient(src.title)}</strong>
+              <span class="badge badge-amber" style="flex-shrink:0;">${src.similarity}%</span>
+            </div>
+            <div class="text-muted" style="font-size:12px;margin-bottom:6px;">${escapeHtmlClient(src.snippet || "")}</div>
+            ${src.url && !src.url.startsWith("#") ? `<a href="${escapeHtmlClient(src.url)}" target="_blank" rel="noopener" class="text-blue" style="font-size:12px;font-weight:600;">Buka Tautan Publikasi ↗</a>` : ""}
+          </div>
+        `).join("");
+      }
+
+      if (typeof Chart !== "undefined") {
+        const ctx = document.getElementById("resultDistChart");
+        if (STATE.charts.resultDist) STATE.charts.resultDist.destroy();
+        STATE.charts.resultDist = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Kemiripan (%)", "Orisinal / Unik (%)"],
+            datasets: [{
+              data: [result.similarityPercentage, result.uniquePercentage],
+              backgroundColor: ["#F59E0B", "#10B981"],
+              borderWidth: 0
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+        });
+      }
+    }
+
+    function recheckCurrentDoc() {
+      switchUserPage("u-check");
+    }
+
+    function sendMatchedToParaphrase() {
+      if (!STATE.currentResult) return switchUserPage("u-paraphrase");
+      const matched = (STATE.currentResult.segments || []).filter(s => s.matched).map(s => s.text).join(" ");
+      const full = (STATE.currentResult.segments || []).map(s => s.text).join(" ");
+      document.getElementById("paraInputText").value = matched || full;
+      switchUserPage("u-paraphrase");
+    }
+
+    async function downloadCurrentReportPdf() {
+      if (!STATE.currentResult || !STATE.currentResult.checkId) return;
+      const btn = document.getElementById("btnDownloadReportPdf");
+      btn.disabled = true;
+      btn.textContent = "Menyiapkan PDF...";
+      try {
+        const res = await callBackend("downloadReportPdf", { checkId: STATE.currentResult.checkId });
+        const link = document.createElement("a");
+        link.href = "data:application/pdf;base64," + res.base64;
+        link.download = res.fileName || "Laporan_Plagisense.pdf";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast("Laporan PDF berhasil diunduh.", "success");
+      } catch (e) {
+        showToast(e.message, "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Download Laporan PDF";
+      }
+    }
+
+    // USER DASHBOARD, HISTORY, PARAPHRASE & PROFILE
+    async function loadUserDashboard() {
+      try {
+        const data = await callBackend("getUserDashboard");
+        STATE.userChecksCache = data.recentChecks || [];
+        document.getElementById("uStatDocs").textContent = data.stats.totalDocs;
+        document.getElementById("uStatAvgSim").textContent = data.stats.avgSimilarity + "%";
+        document.getElementById("uStatPara").textContent = data.stats.totalParaphrases;
+        document.getElementById("uStatLastDate").textContent = data.stats.lastCheckDate
+          ? new Date(data.stats.lastCheckDate).toLocaleDateString("id-ID")
+          : "Belum ada";
+
+        const recentBox = document.getElementById("uRecentDocsList");
+        if (!data.recentChecks || data.recentChecks.length === 0) {
+          recentBox.innerHTML = `<div class="text-muted" style="font-size:13px;padding:24px 0;text-align:center;">Belum ada dokumen yang diperiksa.</div>`;
+        } else {
+          recentBox.innerHTML = data.recentChecks.slice(0, 5).map(item => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);">
+              <div style="min-width:0;">
+                <div class="fw-bold" style="font-size:13px;word-break:break-word;">${escapeHtmlClient(item.documentName)}</div>
+                <div class="text-muted" style="font-size:11px;">${new Date(item.createdAt).toLocaleDateString("id-ID")}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                <span class="badge ${item.similarity > 25 ? "badge-red" : "badge-blue"}">${item.similarity}%</span>
+                <button type="button" class="btn btn-outline btn-sm" onclick="viewCheckDetail('${item.checkId}')">Lihat</button>
+              </div>
+            </div>
+          `).join("");
+        }
+
+        if (typeof Chart !== "undefined" && data.chart) {
+          const ctx = document.getElementById("userActivityChart");
+          if (STATE.charts.userAct) STATE.charts.userAct.destroy();
+          STATE.charts.userAct = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: data.chart.labels,
+              datasets: [{
+                label: "Pemeriksaan Dokumen",
+                data: data.chart.values,
+                backgroundColor: "#2563EB",
+                borderRadius: 6
+              }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+          });
+        }
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function loadUserHistory() {
+      try {
+        const data = await callBackend("getUserDashboard");
+        const list = data.recentChecks || [];
+        const tbody = document.getElementById("userHistoryTableBody");
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">Belum ada riwayat pemeriksaan plagiasi.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = list.map((item, idx) => `
+          <tr>
+            <td data-label="No.">${idx + 1}</td>
+            <td data-label="Nama Dokumen"><strong>${escapeHtmlClient(item.documentName)}</strong></td>
+            <td data-label="Tanggal">${new Date(item.createdAt).toLocaleString("id-ID")}</td>
+            <td data-label="Kemiripan"><span class="badge ${item.similarity > 25 ? "badge-red" : "badge-blue"}">${item.similarity}%</span></td>
+            <td data-label="Status"><span class="badge badge-green">${escapeHtmlClient(item.status)}</span></td>
+            <td data-label="Aksi">
+              <div style="display:flex;gap:6px;justify-content:flex-end;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="viewCheckDetail('${item.checkId}')">Detail</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteCheckItem('${item.checkId}')">Hapus</button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function viewCheckDetail(checkId) {
+      try {
+        const res = await callBackend("getCheckDetail", { checkId });
+        if (STATE.user && String(STATE.user.Role).toLowerCase() === "admin") {
+          navigateTo("user");
+        }
+        switchUserPage("u-result");
+        renderPlagiarismResult(res);
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    function deleteCheckItem(checkId) {
+      openConfirmModal("Hapus Riwayat Pemeriksaan", "Apakah Anda yakin ingin menghapus riwayat pemeriksaan ini secara permanen?", async () => {
+        try {
+          await callBackend("deleteCheckHistory", { checkId });
+          showToast("Riwayat berhasil dihapus.", "success");
+          loadUserHistory();
+          loadUserDashboard();
+        } catch (e) {
+          showToast(e.message, "error");
+        }
+      });
+    }
+
+    async function submitParaphrase() {
+      const text = document.getElementById("paraInputText").value.trim();
+      const style = document.getElementById("paraStyle").value;
+      const intensity = document.getElementById("paraIntensity").value;
+      if (text.length < 20) return showToast("Teks minimal 20 karakter untuk diparafrase.", "error");
+
+      const btn = document.getElementById("btnRunParaphrase");
+      btn.disabled = true;
+      btn.textContent = "Memparafrase...";
+      try {
+        const res = await callBackend("runParaphrase", { text, style, intensity });
+        document.getElementById("paraOutputText").value = res.paraphrasedText;
+        const noteEl = document.getElementById("paraCitationNote");
+        noteEl.textContent = res.reminder;
+        noteEl.classList.remove("hidden");
+        showToast("Parafrase akademik selesai!", "success");
+      } catch (e) {
+        showToast(e.message, "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Parafrase Sekarang";
+      }
+    }
+
+    function copyParaphraseResult() {
+      const out = document.getElementById("paraOutputText").value;
+      if (!out) return showToast("Belum ada hasil parafrase untuk disalin.", "error");
+      copyTextFallback_(out);
+      showToast("Hasil parafrase berhasil disalin ke clipboard.", "success");
+    }
+
+    function resetParaphraseForm() {
+      document.getElementById("paraInputText").value = "";
+      document.getElementById("paraOutputText").value = "";
+      document.getElementById("paraCitationNote").classList.add("hidden");
+    }
+
+    async function saveUserProfile() {
+      const nama = document.getElementById("profNama").value.trim();
+      const oldPassword = document.getElementById("profOldPass").value;
+      const newPassword = document.getElementById("profNewPass").value;
+      try {
+        const updated = await callBackend("updateProfile", { nama, oldPassword, newPassword });
+        STATE.user = updated;
+        localStorage.setItem("pls_user", JSON.stringify(updated));
+        document.getElementById("profOldPass").value = "";
+        document.getElementById("profNewPass").value = "";
+        syncNavbarAuth();
+        document.getElementById("sidebarUserName").textContent = updated.Nama;
+        showToast("Profil berhasil diperbarui.", "success");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    // ADMINISTRATOR PANEL FUNCTIONS
+    async function loadAdminDashboard() {
+      try {
+        const data = await callBackend("adminGetDashboard");
+        document.getElementById("aStatUsers").textContent = data.stats.totalUsers;
+        document.getElementById("aStatDocs").textContent = data.stats.totalDocuments;
+        document.getElementById("aStatToday").textContent = data.stats.checksToday;
+        document.getElementById("aStatPara").textContent = data.stats.totalParaphrases;
+
+        document.getElementById("aRecentChecksList").innerHTML = (data.recentChecks || []).map(c => `
+          <div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+            <span style="word-break:break-word;"><strong>${escapeHtmlClient(c.documentName)}</strong> (${escapeHtmlClient(c.userId)})</span>
+            <span class="badge badge-blue" style="flex-shrink:0;">${c.similarity}%</span>
+          </div>
+        `).join("") || `<div class="text-muted" style="font-size:13px;">Belum ada data.</div>`;
+
+        document.getElementById("aRecentUsersList").innerHTML = (data.recentUsers || []).map(u => `
+          <div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+            <span style="word-break:break-word;"><strong>${escapeHtmlClient(u.Nama)}</strong> — ${escapeHtmlClient(u.Email)}</span>
+            <span class="badge ${u.Status === "active" ? "badge-green" : "badge-red"}" style="flex-shrink:0;">${escapeHtmlClient(u.Status)}</span>
+          </div>
+        `).join("") || `<div class="text-muted" style="font-size:13px;">Belum ada data.</div>`;
+
+        if (typeof Chart !== "undefined" && data.charts) {
+          if (STATE.charts.admChecks) STATE.charts.admChecks.destroy();
+          STATE.charts.admChecks = new Chart(document.getElementById("adminChecksChart"), {
+            type: "line",
+            data: {
+              labels: data.charts.months,
+              datasets: [{ label: "Pemeriksaan", data: data.charts.checksPerMonth, borderColor: "#2563EB", tension: 0.3 }]
+            },
+            options: { responsive: true }
+          });
+
+          if (STATE.charts.admUsers) STATE.charts.admUsers.destroy();
+          STATE.charts.admUsers = new Chart(document.getElementById("adminUsersChart"), {
+            type: "bar",
+            data: {
+              labels: data.charts.months,
+              datasets: [{ label: "Pengguna Baru", data: data.charts.usersPerMonth, backgroundColor: "#06B6D4", borderRadius: 6 }]
+            },
+            options: { responsive: true }
+          });
+        }
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function loadAdminUsers() {
+      try {
+        STATE.adminUsersCache = await callBackend("adminGetUsers");
+        renderAdminUsersTable(STATE.adminUsersCache);
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    function filterAdminUsers() {
+      const q = document.getElementById("adminUserSearch").value.toLowerCase();
+      const filtered = STATE.adminUsersCache.filter(u =>
+        String(u.Nama).toLowerCase().includes(q) || String(u.Email).toLowerCase().includes(q)
+      );
+      renderAdminUsersTable(filtered);
+    }
+
+    function renderAdminUsersTable(users) {
+      document.getElementById("adminUsersTableBody").innerHTML = users.map(u => `
+        <tr>
+          <td data-label="User ID">${escapeHtmlClient(u.User_ID)}</td>
+          <td data-label="Nama"><strong>${escapeHtmlClient(u.Nama)}</strong></td>
+          <td data-label="Email">${escapeHtmlClient(u.Email)}</td>
+          <td data-label="Role"><span class="badge badge-cyan">${escapeHtmlClient(u.Role)}</span></td>
+          <td data-label="Status"><span class="badge ${u.Status === "active" ? "badge-green" : "badge-red"}">${escapeHtmlClient(u.Status)}</span></td>
+          <td data-label="Aksi">
+            ${u.Role !== "admin" ? `
+              <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="toggleUserStatusAdmin('${u.User_ID}')">${u.Status === "active" ? "Nonaktifkan" : "Aktifkan"}</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteUserAdmin('${u.User_ID}')">Hapus</button>
+              </div>
+            ` : `<span class="text-muted" style="font-size:12px;">Dilindungi</span>`}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function toggleUserStatusAdmin(userId) {
+      try {
+        await callBackend("adminToggleUserStatus", { userId });
+        showToast("Status pengguna diperbarui.", "success");
+        loadAdminUsers();
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    function deleteUserAdmin(userId) {
+      openConfirmModal("Hapus Pengguna", "Yakin ingin menghapus akun pengguna ini?", async () => {
+        try {
+          await callBackend("adminDeleteUser", { userId });
+          showToast("Pengguna berhasil dihapus.", "success");
+          loadAdminUsers();
+        } catch (e) {
+          showToast(e.message, "error");
+        }
+      });
+    }
+
+    async function loadAdminChecks() {
+      try {
+        const list = await callBackend("adminGetAllChecks");
+        document.getElementById("adminChecksTableBody").innerHTML = list.map(c => `
+          <tr>
+            <td data-label="ID">${escapeHtmlClient(c.Check_ID)}</td>
+            <td data-label="Pengguna">${escapeHtmlClient(c.User_Name)}</td>
+            <td data-label="Dokumen"><strong>${escapeHtmlClient(c.Document_Name)}</strong></td>
+            <td data-label="Tanggal">${new Date(c.Created_At).toLocaleString("id-ID")}</td>
+            <td data-label="Kemiripan"><span class="badge badge-blue">${c.Similarity_Percentage}%</span></td>
+            <td data-label="Aksi"><button type="button" class="btn btn-outline btn-sm" onclick="viewCheckDetail('${c.Check_ID}')">Detail</button></td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function loadAdminLogs() {
+      try {
+        const logs = await callBackend("adminGetLogs");
+        document.getElementById("adminLogsTableBody").innerHTML = logs.map(l => `
+          <tr>
+            <td data-label="ID Log">${escapeHtmlClient(l.Log_ID)}</td>
+            <td data-label="Waktu">${new Date(l.Timestamp).toLocaleString("id-ID")}</td>
+            <td data-label="Pengguna">${escapeHtmlClient(l.User_Name)}</td>
+            <td data-label="Role"><span class="badge badge-cyan">${escapeHtmlClient(l.Role)}</span></td>
+            <td data-label="Aktivitas"><strong>${escapeHtmlClient(l.Action)}</strong></td>
+            <td data-label="Detail">${escapeHtmlClient(l.Detail)}</td>
+            <td data-label="Status"><span class="badge ${l.Status === "SUCCESS" ? "badge-green" : "badge-amber"}">${escapeHtmlClient(l.Status)}</span></td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function loadAdminDocs() {
+      try {
+        const docs = await callBackend("adminGetDocuments");
+        document.getElementById("adminDocsTableBody").innerHTML = docs.map(d => `
+          <tr>
+            <td data-label="Check ID">${escapeHtmlClient(d.checkId)}</td>
+            <td data-label="Owner">${escapeHtmlClient(d.userId)}</td>
+            <td data-label="Nama File"><strong>${escapeHtmlClient(d.documentName)}</strong></td>
+            <td data-label="Tipe">${escapeHtmlClient(d.fileType)}</td>
+            <td data-label="Ukuran">${escapeHtmlClient(d.sizeLabel)}</td>
+            <td data-label="Status"><span class="badge badge-green">${escapeHtmlClient(d.driveStatus)}</span></td>
+            <td data-label="Aksi">${d.driveUrl ? `<a href="${escapeHtmlClient(d.driveUrl)}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Drive ↗</a>` : "-"}</td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function loadAdminSettings() {
+      try {
+        const cfg = await callBackend("adminGetSettings");
+        document.getElementById("setPlagProvider").value = cfg.settings.PLAGIARISM_PROVIDER || "BUILT_IN_HYBRID";
+        document.getElementById("setGoogleCx").value = cfg.googleCx || "";
+        document.getElementById("setGuestQuota").value = cfg.settings.GUEST_QUOTA || 2;
+        document.getElementById("setMaxSize").value = cfg.settings.MAX_FILE_SIZE_MB || 10;
+        document.getElementById("setSimNote").value = cfg.settings.SIMILARITY_NOTE || "";
+        document.getElementById("badgePlagKey").textContent = cfg.hasPlagKey ? "Tersimpan" : "Belum Diatur";
+        document.getElementById("badgePlagKey").className = cfg.hasPlagKey ? "badge badge-green" : "badge badge-amber";
+        document.getElementById("badgeGoogleCx").textContent = cfg.googleCx ? "Tersimpan" : "Belum Diatur";
+        document.getElementById("badgeGoogleCx").className = cfg.googleCx ? "badge badge-green" : "badge badge-amber";
+        document.getElementById("badgeParaKey").textContent = cfg.hasParaKey ? "Tersimpan" : "Belum Diatur";
+        document.getElementById("badgeParaKey").className = cfg.hasParaKey ? "badge badge-green" : "badge badge-amber";
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    async function saveAdminSettings() {
+      try {
+        await callBackend("adminSaveSettings", {
+          plagiarismProvider: document.getElementById("setPlagProvider").value,
+          plagiarismApiKey: document.getElementById("setPlagKey").value,
+          googleSearchCx: document.getElementById("setGoogleCx").value,
+          paraphraseApiKey: document.getElementById("setParaKey").value,
+          guestQuota: document.getElementById("setGuestQuota").value,
+          maxFileSizeMb: document.getElementById("setMaxSize").value,
+          similarityNote: document.getElementById("setSimNote").value
+        });
+        document.getElementById("setPlagKey").value = "";
+        document.getElementById("setParaKey").value = "";
+        showToast("Pengaturan sistem berhasil disimpan.", "success");
+        loadAdminSettings();
+      } catch (e) {
+        showToast(e.message, "error");
+      }
+    }
+
+    // WRITE REVIEW & CONFIRM MODALS
+    function openWriteReviewModal() {
+      if (!STATE.token || !STATE.user) {
+        openAuthModal("login", "Silakan Login terlebih dahulu untuk mengirimkan ulasan pengguna.");
+        return;
+      }
+      document.getElementById("writeReviewModal").classList.remove("hidden");
+    }
+
+    function closeWriteReviewModal() {
+      document.getElementById("writeReviewModal").classList.add("hidden");
+    }
+
+    async function submitReviewForm() {
+      const roleLabel = document.getElementById("revRoleInput").value.trim() || "Mahasiswa / Akademisi";
+      const rating = Number(document.getElementById("revRatingInput").value || 5);
+      const comment = document.getElementById("revCommentInput").value.trim();
+
+      if (comment.length < 10) {
+        return showToast("Ulasan minimal 10 karakter.", "error");
+      }
+
+      const btn = document.getElementById("btnSubmitReview");
+      btn.disabled = true;
+      btn.textContent = "Mengirim...";
+      try {
+        const res = await callBackend("submitReview", { roleLabel, rating, comment });
+        showToast(res.message || "Ulasan berhasil dikirim!", "success");
+        document.getElementById("revCommentInput").value = "";
+        closeWriteReviewModal();
+        loadPublicStatsAndReviews();
+      } catch (e) {
+        showToast(e.message, "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Kirim Ulasan";
+      }
+    }
+
+    let confirmCallback = null;
+    function openConfirmModal(title, message, onProceed) {
+      document.getElementById("confirmTitle").textContent = title;
+      document.getElementById("confirmMessage").textContent = message;
+      confirmCallback = onProceed;
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      document.getElementById("confirmModal").classList.add("hidden");
+      confirmCallback = null;
+    }
+
+    document.getElementById("confirmProceedBtn").addEventListener("click", async () => {
+      if (typeof confirmCallback === "function") {
+        const fn = confirmCallback;
+        closeConfirmModal();
+        await fn();
+      }
+    });
+  </script>
+</body>
+</html>
